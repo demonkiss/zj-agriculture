@@ -1,0 +1,5 @@
+E:\IA-GIS\IAGIS\bin\IAGIS.dll.config
+E:\IA-GIS\IAGIS\bin\IAGIS.dll
+E:\IA-GIS\IAGIS\bin\IAGIS.pdb
+E:\IA-GIS\IAGIS\obj\Debug\IAGIS.dll
+E:\IA-GIS\IAGIS\obj\Debug\IAGIS.pdb
