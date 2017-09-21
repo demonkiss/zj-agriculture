@@ -80,84 +80,54 @@ function Main_Map_ShowMap() {
             // var chartLayer = new Layer({ opacity: 0.80, id: 'chartLayer' });
             // map.addLayer(chartLayer);
 
-            layerSet.push(CustomLayers[0]);
-            initLayerSelction();
+           // layerSet.push(CustomLayers[0]);
+       //   initLayerSelction();
             ////图层加载
 
-            //$(".onoff").click(function () {
-            //    if ($(this).attr('value') == "未确权") {
-            //        if ($(this).attr('checked')) {
-            //            //do someting  
-            //            var rmap = map.getLayer('notConfirm');
-
-            //            map.removeLayer(rmap);
-            //            layerSet.length = 0;
-            //            iQuerySql = "";
-            //            $(this).attr('checked', false);
-
-
-            //        } else {
-            //            //do someting else  
-            //            imageParameters.layerDefinitions = [layerDefs[0]];
-            //            iQuerySql = layerDefs[0];
-            //            var qq_not = new ArcGISDynamicMapServiceLayer(ny_layer.dynaurl, { "imageParameters": imageParameters, "id": "notConfirm", });
-            //            map.addLayer(qq_not, 3);
-            //            layerSet.push(CustomLayers[0]);
-            //            $(this).attr('checked', true);
-            //        }
-            //    } else {
-            //        if ($(this).attr('checked')) {
-            //            //do someting  
-            //            var rmap = map.getLayer('Confirm');
-            //            map.removeLayer(rmap);
-            //            $(this).attr('checked', false);
-            //        } else {
-            //            //do someting else  
-            //            imageParameters.layerDefinitions = [layerDefs[1]];
-            //            iQuerySql = layerDefs[1];
-            //            var qq = new ArcGISDynamicMapServiceLayer(ny_layer.dynaurl, { "imageParameters": imageParameters, "id": "Confirm" });
-            //            map.addLayer(qq, 4);
-            //            $(this).attr('checked', true);
-            //        }
-            //    }
-
-            //})
+           
             infoWindow = new InfoWindow(null, domConstruct.create("div", null, null, map.root));
             infoWindow.startup();
             map.setInfoWindow(infoWindow);
             map.on("mouse-move", function (e) {
                 //  $(".location p").html(e.mapPoint.x + "," + e.mapPoint.y);
             })
+            map.on("click", function (e) {
+                console.log(e.mapPoint.x);
+            })
+            //map.on("load", function () {
+            //    loadcluster();
+            //})
+            loadcluster();
             /*地图绘制事件*/
             toolbar = new Draw(map);
             toolbar.on("draw-complete", GeometryQueryTask);
-            map.on("zoom-end", function (e) {
-                // console.log(map.getScale());
-                var scale = Math.round(map.getScale());
-                $(".scale p").html("当前比例尺：1:" + scale);
-                if (scale < BaseConfig.ScaleValue) {
-                    if (iQueryDk == "" && currentLayerServiceUrl && currentLayerIndex) {
-                        iQueryDk = map.on("click", function (e) {
+            //map.on("zoom-end", function (e) {
+            //    // console.log(map.getScale());
+            //    var scale = Math.round(map.getScale());
+            //    $(".scale p").html("当前比例尺：1:" + scale);
+            //    if (scale < BaseConfig.ScaleValue) {
+            //        if (iQueryDk == "" && currentLayerServiceUrl && currentLayerIndex) {
+            //            iQueryDk = map.on("click", function (e) {
 
-                            if (map.layerIds.length > 2) {
+            //                if (map.layerIds.length > 2) {
 
-                                require(["Javascript/Modules/QueryTask.js"], function (QueryTask) {
-                                    QueryTask.queryByClick(e.mapPoint, currentLayerServiceUrl, currentLayerIndex, iQuerySql);
-                                });
-                            }
-                        })
-                    }
-                }
-                else {
+            //                    require(["Javascript/Modules/QueryTask.js"], function (QueryTask) {
+            //                        QueryTask.queryByClick(e.mapPoint, currentLayerServiceUrl, currentLayerIndex, iQuerySql);
+            //                    });
+            //                }
+            //            })
+            //        }
+            //    }
+            //    else {
 
-                    if (iQueryDk != "") {
-                        iQueryDk.remove();
-                        iQueryDk = "";
-                    }
+            //        if (iQueryDk != "") {
+            //            iQueryDk.remove();
+            //            iQueryDk = "";
+            //        }
 
-                }
+            //    }
 
-            });
+            //});
             //数组方法的扩展
             Array.prototype.indexOf = function (val) {
                 for (var i = 0; i < this.length; i++) {
@@ -191,14 +161,168 @@ function Main_Map_ShowMap() {
             });
             /*初始化专题目录树*/
             $(document).ready(function () {
-                getsubArea();
-                getChartData();
+              //  getsubArea();
+             //   getChartData();
                 //  initZjBorder();
+               
             });
         })
 
 }
 /*切换市县清除加载图层*/
+function loadcluster() {
+    
+        $.ajax({
+            url: "Json/20000json.json",
+            dataType: 'json',
+            success: function (data) {
+                var pdata = [];
+                //  for (var i = 0; i < data.features.length;i++){
+                for (var i = 0; i < 200; i++) {
+                    pdata.push(data.features[i]);
+                }
+
+                addClusters(pdata, "粮食生产功能区");
+
+
+            }
+
+        });
+   
+  
+}
+function addClusters(resp, type) {
+    require([
+      "dojo/parser", "dojo/ready", "dojo/_base/array", "esri/Color", "dojo/dom-style", "dojo/query", "esri/map", "esri/request", "esri/graphic", "esri/geometry/Extent",
+      "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleFillSymbol", "esri/symbols/PictureMarkerSymbol",
+      "esri/renderers/ClassBreaksRenderer", "esri/layers/GraphicsLayer", "esri/SpatialReference", "esri/dijit/PopupTemplate", "esri/geometry/Point", "esri/geometry/webMercatorUtils",
+
+      "dijit/layout/BorderContainer",
+      "dijit/layout/ContentPane",
+      "dojo/domReady!"
+    ], function (
+      parser, ready, arrayUtils, Color, domStyle, query,
+      Map, esriRequest, Graphic, Extent,
+      SimpleMarkerSymbol, SimpleFillSymbol, PictureMarkerSymbol, ClassBreaksRenderer,
+      GraphicsLayer, SpatialReference, PopupTemplate, Point, webMercatorUtils
+
+    ) {
+        var clusterLayer;
+        var popupOptions = {
+            "markerSymbol": new SimpleMarkerSymbol("circle", 20, null, new Color([0, 0, 0, 0.25])),
+            "marginLeft": "20",
+            "marginTop": "20"
+        };
+        var photoInfo = {};
+        var wgs = new SpatialReference({
+            "wkid": 4326
+        });
+        var testp;
+        var infoTemplate;
+        photoInfo.data = arrayUtils.map(resp, function (p, i) {
+            var latlng = new Point(parseFloat(p.geometry.x), parseFloat(p.geometry.y), wgs);
+            testp = latlng;
+            var graphic;
+            var webMercator = webMercatorUtils.geographicToWebMercator(latlng);
+
+            //   debugger;
+            var attributes;
+
+            if (p.dt != undefined) {
+                attributes = {
+                    "名称": p.name,
+                    "数量": p.dt
+                };
+                infoTemplate = new esri.InfoTemplate("Attributes", "${名称}<br>办件数量：${数量}");
+                infoTemplate.setTitle(type);
+            } else {
+                attributes = {
+                    "名称": "test"
+                };
+                infoTemplate = new esri.InfoTemplate("Attributes", "${名称}");
+                infoTemplate.setTitle(type);
+            }
+
+            return {
+                "x": webMercator.x,
+                "y": webMercator.y,
+
+                "attributes": attributes
+            };
+        });
+
+        // popupTemplate to work with attributes specific to this dataset
+        var popupTemplate = new PopupTemplate({
+            "title": type,
+            "fieldInfos": [{
+                "fieldName": "名称",
+                visible: true
+            }
+            ]
+        }
+            );
+
+
+
+        // cluster layer that uses OpenLayers style clustering
+        require(["Javascript/js/ClusterLayer.js"], function (ClusterLayer) {
+            // debugger;
+            clusterLayer = new ClusterLayer({
+                "data": photoInfo.data,
+                "distance": 100,
+                "id": type,
+                "labelColor": "#000",
+                "showSingles": false,
+                "labelOffset": 10,
+                "resolution": map.extent.getWidth() / map.width,
+                "singleColor": "#888",
+                "singleTemplate": infoTemplate,
+
+                "maxSingles": 5000
+            });
+        })
+
+        var defaultSym = new SimpleMarkerSymbol().setSize(4);
+        var renderer = new ClassBreaksRenderer(defaultSym, "clusterCount");
+
+        var picBaseUrl = "img/";
+        var blue = new PictureMarkerSymbol(picBaseUrl + "marker-blue.png", 28, 52).setOffset(0, 0);
+        var green = new PictureMarkerSymbol(picBaseUrl + "marker-green.png", 28, 52).setOffset(0, 0);
+        var red = new PictureMarkerSymbol(picBaseUrl + "marker-red.png", 28, 52).setOffset(0, 0);
+        if (type == "粮食生产功能区") {
+            renderer.addBreak(0, 5000, blue);
+        }
+        else if (type == "业务监测") {
+            renderer.addBreak(0, 5000, green);
+        }
+        //var graphic = new esri.Graphic(testp, green);
+       // map.graphics.add(graphic);
+        // renderer.addBreak(2, 200, green);
+        // renderer.addBreak(200, 5000, red);
+
+        clusterLayer.setRenderer(renderer);
+    
+          //  layerCluster.push(clusterLayer);
+      
+
+        map.addLayer(clusterLayer);
+        //  map.centerAndZoom([120.160361472, 30.2458220636], 6);
+        // close the info window when the map is clicked
+        map.on("click", cleanUp);
+        // close the info window when esc is pressed
+        map.on("key-down", function (e) {
+            if (e.keyCode === 27) {
+                cleanUp();
+            }
+        });
+        function cleanUp() {
+            map.infoWindow.hide();
+            clusterLayer.clearSingles();
+        }
+
+
+    })
+}
 function ResetLayer() {
     // $(".classify").attr("disabled", true);
     var rmap = map.getLayer(map.layerIds[0]);
@@ -589,23 +713,23 @@ function Main_Map_SetEvents() {
 
     })
     //隐藏左侧内容
-    var oBtn1 = document.getElementById("btn1");
-    var oLeft = document.getElementById("left");
-    oBtn1.onclick = function () {
-        if (this.className == "out") {
-            startMove(oLeft, { left: -250 },
-                      function () {
-                          oBtn1.src = "images/icon6.png";
-                          oBtn1.className = "out2"
-                      });
-        } else {
-            startMove(oLeft, { left: 19 },
-                      function () {
-                          oBtn1.src = "images/icon5.png";
-                          oBtn1.className = "out"
-                      });
-        }
-    }
+    //var oBtn1 = document.getElementById("btn1");
+    //var oLeft = document.getElementById("left");
+    //oBtn1.onclick = function () {
+    //    if (this.className == "out") {
+    //        startMove(oLeft, { left: -250 },
+    //                  function () {
+    //                      oBtn1.src = "images/icon6.png";
+    //                      oBtn1.className = "out2"
+    //                  });
+    //    } else {
+    //        startMove(oLeft, { left: 19 },
+    //                  function () {
+    //                      oBtn1.src = "images/icon5.png";
+    //                      oBtn1.className = "out"
+    //                  });
+    //    }
+    //}
     //框选查询结果事件
     //$('.results').on('mouseover mouseout', ".menuli", function (event) {
     //    if (event.type == 'mouseover') {
