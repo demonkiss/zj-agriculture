@@ -60,8 +60,8 @@ function Main_Map_Start() {
 }
 
 function Main_Map_ShowMap() {
-    require(["esri/map", "esri/layers/layer", "esri/layers/ImageParameters", "TDTLayer", "TDTLayer_Anno", "esri/layers/ArcGISDynamicMapServiceLayer", "esri/dijit/Popup", "esri/toolbars/draw", "dojo/dom-construct", "esri/layers/FeatureLayer", "esri/SpatialReference", "esri/geometry/Extent", "dojo/on", "dojo/dom-class", "dojo/dom-style", "dojo/domReady!"],
-        function (Map, Layer, ImageParameters, TDTLayer, TDTLayer_Anno, ArcGISDynamicMapServiceLayer, InfoWindow, Draw, domConstruct, FeatureLayer, SpatialReference, Extent, on, domClass, domStyle) {
+    require(["esri/map", "esri/layers/layer", "esri/layers/GraphicsLayer", "esri/layers/ImageParameters", "TDTLayer", "TDTLayer_Anno", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer", "esri/dijit/Popup", "esri/toolbars/draw", "dojo/dom-construct", "esri/layers/FeatureLayer", "esri/SpatialReference", "esri/geometry/Extent", "dojo/on", "dojo/dom-class", "dojo/dom-style", "dojo/domReady!"],
+        function (Map, Layer, GraphicLayer,ImageParameters, TDTLayer, TDTLayer_Anno,ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer, InfoWindow, Draw, domConstruct, FeatureLayer, SpatialReference, Extent, on, domClass, domStyle) {
             // initextent = new Extent(118.33968849655, 29.1885894750343, 120.75238251614, 30.6257261531396, new SpatialReference({ wkid: 4326 }));
             //  fullextent = new Extent(118.352429227, 29.09551322, 120.709258528, 30.690650616, new SpatialReference({ wkid: 4326 }));
             //清除arcgis/rest/info?=json问题
@@ -70,16 +70,33 @@ function Main_Map_ShowMap() {
                 logo: false,
                 slider: false,
                 center: [120, 30.3],
-                zoom: 13
+                zoom: 13,
+             //   basemap: "topo",
 
             });
             var layer = new TDTLayer("img");//影像img 矢量 vec
-            map.addLayer(layer, 0);
+          //  map.addLayer(layer, 0);
             var annolayer = new TDTLayer_Anno("cia");//影像cia 矢量cva
-            map.addLayer(annolayer, 1);
-            // var chartLayer = new Layer({ opacity: 0.80, id: 'chartLayer' });
-            // map.addLayer(chartLayer);
+        //    map.addLayer(annolayer, 1);
+            var basemap = "http://www.hangzhoumap.gov.cn/Tile/ArcGISFlex/HZTDTVECTORBLEND.gis";
+            basemap = new esri.layers.ArcGISTiledMapServiceLayer(basemap, { id: "basemap" });
+            map.addLayer(basemap, 2);
 
+            var updateListener = map.on("update-end", function (err) {
+                // do something
+                alert();
+                loadcluster();
+                updateListener.remove();
+            });
+
+            //var glayer = new GraphicLayer();
+          //  map.addLayer(glayer);
+            // var chartLayer = new Layer({ opacity: 0.80, id: 'chartLayer' });
+           //  map.addLayer(chartLayer);
+            //map.on("layers-add-result", function () {
+            //    alert();
+
+            //})
            // layerSet.push(CustomLayers[0]);
        //   initLayerSelction();
             ////图层加载
@@ -94,10 +111,11 @@ function Main_Map_ShowMap() {
             map.on("click", function (e) {
                 console.log(e.mapPoint.x);
             })
-            //map.on("load", function () {
-            //    loadcluster();
-            //})
-            loadcluster();
+            map.on("load", function () {
+                alert();
+                loadcluster();
+            })
+          //  loadcluster();
             /*地图绘制事件*/
             toolbar = new Draw(map);
             toolbar.on("draw-complete", GeometryQueryTask);
@@ -174,11 +192,13 @@ function loadcluster() {
     
         $.ajax({
             url: "Json/20000json.json",
+            type: "post",
+            
             dataType: 'json',
             success: function (data) {
                 var pdata = [];
                 //  for (var i = 0; i < data.features.length;i++){
-                for (var i = 0; i < 200; i++) {
+                for (var i = 0; i < 10000; i++) {
                     pdata.push(data.features[i]);
                 }
 
@@ -244,6 +264,8 @@ function addClusters(resp, type) {
             }
 
             return {
+                //"x": latlng.x,
+                //"y": latlng.y,
                 "x": webMercator.x,
                 "y": webMercator.y,
 
@@ -277,8 +299,8 @@ function addClusters(resp, type) {
                 "resolution": map.extent.getWidth() / map.width,
                 "singleColor": "#888",
                 "singleTemplate": infoTemplate,
-
-                "maxSingles": 5000
+              //  "spatialReference" :new SpatialReference({ "wkid": 4326 }),
+                "maxSingles": 15000
             });
         })
 

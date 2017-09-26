@@ -1,6 +1,0 @@
-E:\IA-GIS\IAGIS\bin\IAGIS.dll.config
-E:\IA-GIS\IAGIS\bin\IAGIS.dll
-E:\IA-GIS\IAGIS\bin\IAGIS.pdb
-E:\IA-GIS\IAGIS\obj\Release\IAGIS.csprojResolveAssemblyReference.cache
-E:\IA-GIS\IAGIS\obj\Release\IAGIS.dll
-E:\IA-GIS\IAGIS\obj\Release\IAGIS.pdb

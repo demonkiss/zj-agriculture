@@ -6,16 +6,16 @@
                 this.tildName = type;
                 this.spatialReference = new esri.SpatialReference({ wkid: 4326 });
                 this.initialExtent = (this.fullExtent = new esri.geometry.Extent(-180.0, -90.0, 180.0, 90.0, this.spatialReference));
-             // this.initialExtent = (this.fullExtent = new esri.geometry.Extent(118.33968849655, 29.1885894750343, 120.75238251614, 30.6257261531396, this.spatialReference));
+               // this.initialExtent = (this.fullExtent = new esri.geometry.Extent(118.33968849655, 29.1885894750343, 120.75238251614, 30.6257261531396, this.spatialReference));
                 this.tileInfo = new esri.layers.TileInfo({
                     "rows": 256,
                     "cols": 256,
                     "compressionQuality": 0,
                     "origin": {
-                      // "x": 118.122911693886,
+                      //  "x": 118.122911693886,
                        // "y": 31.2869311022836
-                        "x": -180,
-                        "y": 90
+                          "x": -180,
+                         "y": 90
                     },
                     "spatialReference": {
                         "wkid": 4326
@@ -42,10 +42,10 @@
           { "level": 20, "resolution": 1.341104507425e-6, "scale": 564.2497166720688 }
                     ]
                 });
-              //  dojo.require("esri.Units");
-                this.singleFusedMapCache= true,
-                 this.units =  esri.Units.DECIMAL_DEGREES;
-              // this.units = "esriDecimalDegrees",
+                //  dojo.require("esri.Units");
+                this.singleFusedMapCache = true,
+                 this.units = esri.Units.DECIMAL_DEGREES;
+                // this.units = "esriDecimalDegrees",
                 this.loaded = true;
                 this.onLoad(this);
             },

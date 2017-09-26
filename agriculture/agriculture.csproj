@@ -101,6 +101,8 @@
     <Content Include="css\images\zhumu.png" />
     <Content Include="css\images\zyc.png" />
     <Content Include="css\layout.css" />
+    <Content Include="extras\ClusterLayer_M.js" />
+    <Content Include="extras\ClusterLayer.js" />
     <Content Include="findDK.html" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="images\angleLeft.png" />
@@ -167,16 +169,17 @@
     <Content Include="img\TwoMap.png" />
     <Content Include="img\x.png" />
     <Content Include="img\ztBtn.png" />
-    <Content Include="index.html" />
+    <Content Include="index1.html" />
     <Content Include="Javascript\ArcGISAPI\3.16\dojo\dojo.js" />
+    <Content Include="Javascript\ArcGISAPI\3.16\TDTLayer2.js" />
     <Content Include="Javascript\Framework\code2info.js" />
     <Content Include="Javascript\Framework\Config.js" />
     <Content Include="Javascript\Framework\field_keys.js" />
     <Content Include="Javascript\Framework\hideField.js" />
     <Content Include="Javascript\Framework\LayerDef.js" />
     <Content Include="Javascript\Framework\LayerDef1.js" />
-    <Content Include="Javascript\js\ClusterLayer.js" />
-    <Content Include="Javascript\js\echarts-all.js" />
+    <Content Include="Javascript\lib\ClusterLayer.js" />
+    <Content Include="Javascript\lib\echarts-all.js" />
     <Content Include="Javascript\ArcGISAPI\3.16\esri\css\esri.css" />
     <Content Include="Javascript\ArcGISAPI\3.16\esri\layers\agscommon.js" />
     <Content Include="Javascript\ArcGISAPI\3.16\esri\layers\agsdynamic.js" />
@@ -437,16 +440,16 @@
     <Content Include="Javascript\Jquery\jquery.ui.touch-punch.min.js" />
     <Content Include="Javascript\Jquery\moodular.js" />
     <Content Include="Javascript\Jquery\nano.js" />
-    <Content Include="Javascript\js\bootstrap-table.js" />
-    <Content Include="Javascript\js\bootstrap-treeview.js" />
-    <Content Include="Javascript\js\bootstrap.js" />
+    <Content Include="Javascript\lib\bootstrap-table.js" />
+    <Content Include="Javascript\lib\bootstrap-treeview.js" />
+    <Content Include="Javascript\lib\bootstrap.js" />
     <Content Include="Javascript\Jquery\jquery-2.1.4.js" />
-    <Content Include="Javascript\js\dockeye.js" />
-    <Content Include="Javascript\js\echarts.common.min.js" />
-    <Content Include="Javascript\js\grayscale.js" />
-    <Content Include="Javascript\js\jquery-2.1.4.js" />
-    <Content Include="Javascript\js\jquery-ui.js" />
-    <Content Include="Javascript\js\vue.js" />
+    <Content Include="Javascript\lib\dockeye.js" />
+    <Content Include="Javascript\lib\echarts.common.min.js" />
+    <Content Include="Javascript\lib\grayscale.js" />
+    <Content Include="Javascript\lib\jquery-2.1.4.js" />
+    <Content Include="Javascript\lib\jquery-ui.js" />
+    <Content Include="Javascript\lib\vue.js" />
     <Content Include="Javascript\Modules\AddressQuery.js" />
     <Content Include="Javascript\Modules\DkQuery.js" />
     <Content Include="Javascript\Modules\IdentifyTask.js" />
@@ -456,6 +459,7 @@
     <Content Include="Javascript\Modules\MeasureTask1.js" />
     <Content Include="Javascript\Modules\QueryTask.js" />
     <Content Include="Javascript\Modules\SpatialAnaysis.js" />
+    <Content Include="Javascript\Modules\tdt.js" />
     <Content Include="Javascript\Noty\layouts\bottom.js" />
     <Content Include="Javascript\Noty\layouts\bottomCenter.js" />
     <Content Include="Javascript\Noty\layouts\bottomLeft.js" />
@@ -481,6 +485,7 @@
     </Content>
     <Content Include="Main_Map.htm" />
     <Content Include="Main_Map.js" />
+    <Content Include="index.html" />
     <Content Include="style\bootstrap-slider.css" />
     <Content Include="style\bootstrap-table.css" />
     <Content Include="style\bootstrap.css" />
@@ -544,6 +549,8 @@
     <Content Include="Json\zj\衢州市.json" />
     <Content Include="Json\zj\金华市.json" />
     <Content Include="Json\20000json.json" />
+    <Content Include="Json\药店.json" />
+    <Content Include="Json\multiType.json" />
     <None Include="Properties\PublishProfiles\IAGIS.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
