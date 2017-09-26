@@ -212,11 +212,13 @@
     // internal methods 
     _clusterGraphics: function () {
         //
+        this._clustersArray.length = 0;
         for (var m = 0; m < this._clusterDataArray.length; m++) {
             this._clusterData = this._clusterDataArray[m];
 
             // first time through, loop through the points
             for (var j = 0, jl = this._clusterData.length; j < jl; j++) {
+                this._clusters.length = 0;
                 // see if the current feature should be added to a cluster
                 var point = this._clusterData[j];
                 var clustered = false;
@@ -330,10 +332,13 @@
         for (var m = 0; m < this._clustersArray.length; m++) {
             this._clusters = this._clustersArray[m];
             this._defaultSymbol = new PictureMarkerSymbol("./img/marker-" + this._symbol[m] + ".png", 28, 52).setOffset(0, 0);
+            var k=0;
             for (var i = 0, il = this._clusters.length; i < il; i++) {
                 var c = this._clusters[i];
                 this._showCluster(c, tp);
+                k++;
             }
+            console.log(k);
         }
       //for ( var i = 0, il = this._clusters.length; i < il; i++ ) {
       //  var c = this._clusters[i];
