@@ -27,7 +27,10 @@ dojoConfig = {
 }
 
 /* 装载所有脚本 */
-RequireJS(["Noty/noty", "Framework/Application", "Framework/LayerDef", "Framework/Config", "Framework/code2info", "Framework/hideField", "Framework/confUrl", "Framework/TDTMap", "Framework/field_keys", "JQuery/jquery.json", "js/bootstrap", "js/bootstrap-table", "js/bootstrap-treeview", "js/jquery-ui", "js/grayscale", "js/vue", "Modules/initTable",
+RequireJS(["Noty/noty", "Framework/Application", "Framework/LayerDef", "Framework/Config", "Framework/code2info",
+    "Framework/hideField", "Framework/confUrl", "Framework/field_keys",
+    "JQuery/jquery.json", "js/bootstrap", "js/bootstrap-table",
+    "js/bootstrap-treeview", "js/jquery-ui", "js/grayscale", "Modules/initTable",
      // ArcGIS JS API
     "ArcGISAPI/3.16/init" ],
    
