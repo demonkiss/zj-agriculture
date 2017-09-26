@@ -4,3 +4,9 @@ E:\系统\浙江省农业平台\zj-agriculture\agriculture\bin\agriculture.pdb
 E:\系统\浙江省农业平台\zj-agriculture\agriculture\obj\Release\agriculture.csprojResolveAssemblyReference.cache
 E:\系统\浙江省农业平台\zj-agriculture\agriculture\obj\Release\agriculture.dll
 E:\系统\浙江省农业平台\zj-agriculture\agriculture\obj\Release\agriculture.pdb
+F:\vs2013\zj-agriculture\agriculture\bin\agriculture.dll.config
+F:\vs2013\zj-agriculture\agriculture\bin\agriculture.dll
+F:\vs2013\zj-agriculture\agriculture\bin\agriculture.pdb
+F:\vs2013\zj-agriculture\agriculture\obj\Release\agriculture.csprojResolveAssemblyReference.cache
+F:\vs2013\zj-agriculture\agriculture\obj\Release\agriculture.dll
+F:\vs2013\zj-agriculture\agriculture\obj\Release\agriculture.pdb
