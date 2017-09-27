@@ -64,6 +64,8 @@
     <script src="Javascript/ArcGISAPI/3.16/init.js"></script>
     <script>
         var map;
+        var showClusterData;
+        var clusterType = [];
         require([
           "dojo/parser",
           "dojo/ready",
@@ -130,32 +132,33 @@
             var updateListener = map.on("update-end", function (err) {
                 // do something
                // alert(1);
+                $.ajax({
+                    url: "Json/ls.json",
+                    dataType: 'json',
+                    type: "GET",
+                    async: true,
+                    data: {},
+                    success: function (data) {
+                        // pointData = data;
+                        showClusterData = data.features;
+                      //  addClusters(data);
+
+                    }
+
+                });
                 //$.ajax({
-                //    url: "Json/20000json.json",
+                //    url: "Json/multiType.json",
                 //    dataType: 'json',
                 //    type: "GET",
                 //    async: true,
                 //    data: {},
                 //    success: function (data) {
                 //        pointData = data;
-                //        addClusters(data);
+                //        addMultiClusters(data);
 
                 //    }
 
                 //});
-                $.ajax({
-                    url: "Json/multiType.json",
-                    dataType: 'json',
-                    type: "GET",
-                    async: true,
-                    data: {},
-                    success: function (data) {
-                        pointData = data;
-                        addMultiClusters(data);
-
-                    }
-
-                });
                 updateListener.remove();
             });
             var basemap = "http://www.hangzhoumap.gov.cn/a67db68dbfb2752f9b913dff9ece867117c87e95/Tile/ArcGISFlex/HZTDTVECTORBLEND.gis";
@@ -165,6 +168,19 @@
             basemap = new esri.layers.ArcGISTiledMapServiceLayer(basemap, { id: "basemap" });
            // map.addLayer(basemap, 2);
             $(function () {
+                //数组方法的扩展
+                Array.prototype.indexOf = function (val) {
+                    for (var i = 0; i < this.length; i++) {
+                        if (this[i] === val) return i;
+                    }
+                    return -1;
+                };
+                Array.prototype.remove = function (val) {
+                    var index = this.indexOf(val);
+                    if (index > -1) {
+                        this.splice(index, 1);
+                    }
+                };
                 bindEvt();
             })
             
@@ -192,24 +208,44 @@
                     $(this).on("click", function () {
                         if ($(this).attr("data-state") == "uncheck") {
                             $(this).attr("data-state", "check");
-                            $(this).addClass("active")
+                            $(this).addClass("active");
+                            
+                            // $('#left').children(':visible');
+                            clusterType.push($(this).next().text());
+                            console.log(clusterType);
+                          
+
                         } else {
                             $(this).attr("data-state", "uncheck");
                             $(this).removeClass("active");
+                            clusterType.remove($(this).next().text());
+                            console.log(clusterType);
                         }
                         $(this).prev().trigger("click");
                     })
                 });
                 //切换选择部分的js
                 $(".btns").on("click", "li", function () {
+                    clusterType.length = 0;
                     $(this).addClass("active").siblings().removeClass("active");
                     var $index = $(this).index();
                     $(".content .control").find("ul.second").eq($index).show().siblings("ul.second").hide();
                     $(".control").find("ul.second").eq($index).find("li").eq(0).trigger("click");
 
+                   // alert(2);
+                    var types = $(this).parent().children("label");
+                    for (var i = 0; i < types.length; i++) {
+
+                        if (types[i].attr("data-state") == "checked") {
+                            clusterType.push($(this).next().text());
+                        }
+
+                    }
+
                 });
                 $(".control").find(".second").each(function () {
                     $(this).on("click", "li", function () {
+                        clusterType.length = 0;
                         $(this).addClass("active").siblings().removeClass("active");
                         var $clazz = $(this).attr("class");
                         $clazz = $clazz.split(" ");
@@ -239,6 +275,14 @@
                         $(".content").hide();
                     })
                 })
+                //checkbox
+                //$('.checks input:checkbox').click(function () {
+                //    this.blur();
+                //    this.focus();
+                //    $(this).text();
+                //    console.log($(this).parent().children("input"));
+                //});
+               
                 //切换底图
                 var MapMenu = dojo.query(".MapMenu a");
                 on(MapMenu[0], "click", function (e) {
