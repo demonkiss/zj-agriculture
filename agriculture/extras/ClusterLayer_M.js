@@ -193,11 +193,24 @@
       // find single graphics that make up the cluster that was clicked
       // would be nice to use filter but performance tanks with large arrays in IE
       var singles = [];
-      for ( var i = 0, il = this._clusterData.length; i < il; i++) {
-        if ( e.graphic.attributes.clusterId == this._clusterData[i].attributes.clusterId ) {
-          singles.push(this._clusterData[i]);
-        }
-      }
+      var attrType = e.graphic.attributes.type;
+      Array.prototype.indexOf = function (val) {
+          for (var i = 0; i < this.length; i++) {
+              if (this[i] === val) return i;
+          }
+          return -1;
+      };
+      var index = this._symbol.indexOf(attrType);
+     // if (e.graphic.attributes.type == "green") {
+          this._clusterData = this._clusterDataArray[index];
+    //  }
+    
+          for (var i = 0, il = this._clusterData.length; i < il; i++) {
+              if (e.graphic.attributes.clusterId == this._clusterData[i].attributes.clusterId) {
+                  singles.push(this._clusterData[i]);
+              }
+          }
+      
       if ( singles.length > this._maxSingles ) {
         alert("Sorry, that cluster contains more than " + this._maxSingles + " points. Zoom in for more detail.");
         return;
@@ -215,10 +228,10 @@
         this._clustersArray.length = 0;
         for (var m = 0; m < this._clusterDataArray.length; m++) {
             this._clusterData = this._clusterDataArray[m];
-
+            this._clusters.length = 0;
             // first time through, loop through the points
             for (var j = 0, jl = this._clusterData.length; j < jl; j++) {
-                this._clusters.length = 0;
+                
                 // see if the current feature should be added to a cluster
                 var point = this._clusterData[j];
                 var clustered = false;
@@ -311,6 +324,7 @@
         "y": p.y,
         "attributes": {
             "number": p.attributes.数量,
+           "type": p.attributes.Type,
           "clusterCount": 1,
           "clusterId": clusterId,
           "extent": [ p.x, p.y, p.x, p.y ]
@@ -336,7 +350,7 @@
             for (var i = 0, il = this._clusters.length; i < il; i++) {
                 var c = this._clusters[i];
                 this._showCluster(c, tp);
-                k++;
+                k += this._clusters[i].attributes.clusterCount;
             }
             console.log(k);
         }

@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\base.css" />
+    <Content Include="css\gisframe.css" />
     <Content Include="css\images\bac1.png" />
     <Content Include="css\images\changsan.png" />
     <Content Include="css\images\checkbox-on.png" />
@@ -551,6 +552,7 @@
     <Content Include="Json\20000json.json" />
     <Content Include="Json\药店.json" />
     <Content Include="Json\multiType.json" />
+    <Content Include="Json\ls.json" />
     <None Include="Properties\PublishProfiles\IAGIS.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
