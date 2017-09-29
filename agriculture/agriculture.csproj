@@ -553,6 +553,7 @@
     <Content Include="Json\药店.json" />
     <Content Include="Json\multiType.json" />
     <Content Include="Json\ls.json" />
+    <Content Include="Json\经纬度2000.json" />
     <None Include="Properties\PublishProfiles\IAGIS.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
