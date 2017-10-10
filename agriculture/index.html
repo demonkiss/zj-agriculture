@@ -28,6 +28,14 @@
         .esriViewPopup .gallery {
             margin: 0 auto !important;
         }
+        text{
+            
+            stroke:#f00;
+            stroke-width:5px;
+             -webkit-text-stroke: 2px red;
+             text-shadow: 0 1px white, 1px 0 white, -1px 0 white, 0 -1px white;
+
+        }
     </style>
 
     <script>
@@ -68,7 +76,7 @@
         var showClusterData = [];
         var clusterType = [];
         var clusterImg = [];
-        var textColor="#000"
+        var textColor = "#000"
         require([
           "dojo/parser",
           "dojo/ready",
@@ -134,7 +142,8 @@
             map.addLayer(layer, 0);
             var annolayer = new TDTLayer_Anno("cia");//影像cia 矢量cva
             map.addLayer(annolayer, 1);
-           // map.addLayer(lsLayer);
+            map.addLayer(lsLayer);
+            lsLayer.hide();
             $(function () {
                 $.ajax({
                     url: "Json/经纬度2000.json",
@@ -211,8 +220,14 @@
                 // console.log('Scale: ' + currentScale);
                 if (currentScale > 60000) {
                     lsLayer.hide();
+                    //if (map.getLayer(lsLayer)) {
+                    //   // lsLayer.hide();
+                    //    map.removeLayer(lsLayer);
+                    //}
+
                 } else {
                     lsLayer.show();
+                   // map.addLayer(lsLayer);
                 }
 
 
@@ -237,16 +252,56 @@
             function getClusterData(types, attr) {
                 if (ClusterData) {
                     showClusterData.length = 0;
-                    for (var k = 0; k < types.length; k++) {
-                        var cdata = [];
-                        for (var i = 0; i < ClusterData.length; i++) {
-                            if (types[k] == ClusterData[i].attributes[attr]) {
+                    if (attr != "认定面积") {
+                        for (var k = 0; k < types.length; k++) {
+                            var cdata = [];
+                            for (var i = 0; i < ClusterData.length; i++) {
+                                if (types[k] == ClusterData[i].attributes[attr]) {
 
-                                cdata.push(ClusterData[i]);
+                                    cdata.push(ClusterData[i]);
+                                }
                             }
+                            showClusterData.push(cdata);
                         }
-                        showClusterData.push(cdata);
+                    } else {
+                        for (var k = 0; k < types.length; k++) {
+                            var cdata = [];
+                            switch (types[k]) {
+                                case "大于1000亩":
+                                    for (var i = 0; i < ClusterData.length; i++) {
+                                        if (ClusterData[i].attributes[attr] >= 1000) {
+                                            cdata.push(ClusterData[i]);
+                                        }
+                                    }
+                                    break;
+                                case "500~1000亩":
+                                    for (var i = 0; i < ClusterData.length; i++) {
+                                        if (ClusterData[i].attributes[attr] < 1000 && ClusterData[i].attributes[attr] >= 500) {
+                                            cdata.push(ClusterData[i]);
+                                        }
+                                    }
+                                    break;
+                                case "200~500亩":
+                                    for (var i = 0; i < ClusterData.length; i++) {
+                                        if (ClusterData[i].attributes[attr] < 500 && ClusterData[i].attributes[attr] >= 200) {
+                                            cdata.push(ClusterData[i]);
+                                        }
+                                    }
+                                    break;
+                                case "小于200亩":
+                                    for (var i = 0; i < ClusterData.length; i++) {
+                                        if (ClusterData[i].attributes[attr] < 200) {
+                                            cdata.push(ClusterData[i]);
+                                        }
+                                    }
+                                    break;
+                            }
+
+                            showClusterData.push(cdata);
+                        }
+
                     }
+
                     // console.log(showClusterData);
                     addMultiClusters(showClusterData);
                 }
@@ -368,7 +423,7 @@
                     domClass.add(MapMenu[1], "Mapsatellite");
                     domClass.add(MapMenu[0], "Mapmap1");
                     showLayer("VECTOR");
-                    textColor = "#000";
+                  //  textColor = "#000";
 
                 });
                 on(MapMenu[1], "click", function (e) {
@@ -377,7 +432,7 @@
                     domClass.add(MapMenu[0], "Mapmap");
                     domClass.add(MapMenu[1], "Mapsatellite1");
                     showLayer("RASTER");
-                    textColor = "#fff";
+                    //textColor = "#fff";
 
                 });
                 //市点击事件
@@ -575,7 +630,7 @@
                     "fieldInfos": [{
                         "fieldName": "认定编号",
                         visible: true
-                    },{
+                    }, {
                         "fieldName": "认定名称",
                         visible: true
                     }, {
@@ -587,20 +642,20 @@
                         "label": "On Instagram",
                         visible: true
                     },
-                  
+
 
                     {
                         "fieldName": "建设状态",
-                    visible: true
-                }, {
-                    "fieldName": "建设等级",
-                    "label": "By",
-                    visible: true
-                }, {
-                    "fieldName": "建设认定年",
-                    "label": "On Instagram",
-                    visible: true
-                }]
+                        visible: true
+                    }, {
+                        "fieldName": "建设等级",
+                        "label": "By",
+                        visible: true
+                    }, {
+                        "fieldName": "建设认定年",
+                        "label": "On Instagram",
+                        visible: true
+                    }]
                 });
 
                 // cluster layer that uses OpenLayers style clustering
@@ -609,7 +664,7 @@
                     "data": point_array,
                     "distance": 100,
                     "id": "clusters",
-                    "labelColor": "#fff",
+                    "labelColor": "#000",
                     "labelOffset": 10,
                     "showSingles": true,
                     //  "resolution": map.extent.getWidth() / map.width,

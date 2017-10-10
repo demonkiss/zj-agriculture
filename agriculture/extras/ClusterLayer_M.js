@@ -10,13 +10,13 @@
   "esri/symbols/SimpleMarkerSymbol",
    "esri/symbols/PictureMarkerSymbol",
   "esri/symbols/TextSymbol",
-
+  "esri/symbols/Font",
   "esri/dijit/PopupTemplate",
   "esri/layers/GraphicsLayer",
    "esri/geometry/webMercatorUtils",
 ], function (
   declare, arrayUtils, Color, connect,
-  SpatialReference, Point, Graphic, SimpleMarkerSymbol, PictureMarkerSymbol, TextSymbol,
+  SpatialReference, Point, Graphic, SimpleMarkerSymbol, PictureMarkerSymbol, TextSymbol,Font,
   PopupTemplate, GraphicsLayer, webMercatorUtils
 ) {
     return declare([GraphicsLayer], {
@@ -395,9 +395,15 @@
             if (c.attributes.number != undefined) {
                 showLabel = c.attributes.number;
             }
+            var font = new Font();
+            font.setSize("12pt");
+            font.setFamily("微软雅黑");
+           // font.setWeight(Font.WEIGHT_BOLD);
+          //  textSymbol.setFont(font);
             var label = new TextSymbol(showLabel.toString())
               .setColor(new Color(this._clusterLabelColor))
-              .setOffset(0, this._clusterLabelOffset);
+              .setOffset(0, this._clusterLabelOffset)
+            .setFont(font);
             this.add(
               new Graphic(
                 point,
