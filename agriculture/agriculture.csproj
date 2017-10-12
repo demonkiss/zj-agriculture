@@ -484,6 +484,7 @@
     <Content Include="Json\area.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="loadTDT.html" />
     <Content Include="Main_Map.htm" />
     <Content Include="Main_Map.js" />
     <Content Include="index.html" />
