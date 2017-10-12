@@ -215,9 +215,9 @@
                 };
                 bindEvt();
             })
-            $("#function").hide();
-            $("#cityArea").show();
-            getsubArea("浙江");
+            // $("#function").hide();
+            // $("#cityArea").hide();
+            //getsubArea("浙江");
             map.on("zoom-end", function () {
                 var currentScale = map.getScale();
                 // console.log('Scale: ' + currentScale);
@@ -260,17 +260,37 @@
                             var cdata = [];
                             for (var i = 0; i < ClusterData.length; i++) {
                                 if (types[k] == ClusterData[i].attributes[attr]) {
-                                    if (ssqy != "" && ssqy == ClusterData[i].attributes["县市区名称"]) {
-                                        cdata.push(ClusterData[i]);
-                                    } else {
-                                        if (sssy == ClusterData[i].attributes["地市名称"]) {
+                                    if (sssy == ClusterData[i].attributes["地市名称"]) {
+                                        // cdata.push(ClusterData[i]);
+                                        if (ssqy != "") {
+                                            if (ssqy == ClusterData[i].attributes["县市区名称"]) {
+                                                cdata.push(ClusterData[i]);
+                                            }
+                                            
+                                        } else {
                                             cdata.push(ClusterData[i]);
                                         }
                                     }
+                                    
 
                                 }
                             }
-                            showClusterData.push(cdata);
+                            if (cdata.length) {
+                                showClusterData.push(cdata);
+                            }
+                            else {
+                                $(".checks span").each(function(){
+                                    if ($(this).text() == types[k]) {
+                                        $(this).prev().attr("data-state", "uncheck");
+                                        $(this).prev().removeClass("active");
+
+                                        clusterImg.remove($(this).prev().attr("src"));
+                                        clusterType.remove(types[k]);
+                                    }
+                                }) 
+                                alert("暂无数据");
+                            }
+                            
                         }
                     } else {
                         for (var k = 0; k < types.length; k++) {
@@ -279,10 +299,14 @@
                                 case "大于1000亩":
                                     for (var i = 0; i < ClusterData.length; i++) {
                                         if (ClusterData[i].attributes[attr] >= 1000) {
-                                            if (ssqy != "" && ssqy == ClusterData[i].attributes["县市区名称"]) {
-                                                cdata.push(ClusterData[i]);
-                                            } else {
-                                                if (sssy == ClusterData[i].attributes["地市名称"]) {
+                                            if (sssy == ClusterData[i].attributes["地市名称"]) {
+                                                // cdata.push(ClusterData[i]);
+                                                if (ssqy != "") {
+                                                    if (ssqy == ClusterData[i].attributes["县市区名称"]) {
+                                                        cdata.push(ClusterData[i]);
+                                                    }
+
+                                                } else {
                                                     cdata.push(ClusterData[i]);
                                                 }
                                             }
@@ -294,10 +318,14 @@
                                     for (var i = 0; i < ClusterData.length; i++) {
                                         if (ClusterData[i].attributes[attr] < 1000 && ClusterData[i].attributes[attr] >= 500) {
                                             // cdata.push(ClusterData[i]);
-                                            if (ssqy != "" && ssqy == ClusterData[i].attributes["县市区名称"]) {
-                                                cdata.push(ClusterData[i]);
-                                            } else {
-                                                if (sssy == ClusterData[i].attributes["地市名称"]) {
+                                            if (sssy == ClusterData[i].attributes["地市名称"]) {
+                                                // cdata.push(ClusterData[i]);
+                                                if (ssqy != "") {
+                                                    if (ssqy == ClusterData[i].attributes["县市区名称"]) {
+                                                        cdata.push(ClusterData[i]);
+                                                    }
+
+                                                } else {
                                                     cdata.push(ClusterData[i]);
                                                 }
                                             }
@@ -308,10 +336,14 @@
                                     for (var i = 0; i < ClusterData.length; i++) {
                                         if (ClusterData[i].attributes[attr] < 500 && ClusterData[i].attributes[attr] >= 200) {
                                             // cdata.push(ClusterData[i]);
-                                            if (ssqy != "" && ssqy == ClusterData[i].attributes["县市区名称"]) {
-                                                cdata.push(ClusterData[i]);
-                                            } else {
-                                                if (sssy == ClusterData[i].attributes["地市名称"]) {
+                                            if (sssy == ClusterData[i].attributes["地市名称"]) {
+                                                // cdata.push(ClusterData[i]);
+                                                if (ssqy != "") {
+                                                    if (ssqy == ClusterData[i].attributes["县市区名称"]) {
+                                                        cdata.push(ClusterData[i]);
+                                                    }
+
+                                                } else {
                                                     cdata.push(ClusterData[i]);
                                                 }
                                             }
@@ -322,10 +354,14 @@
                                     for (var i = 0; i < ClusterData.length; i++) {
                                         if (ClusterData[i].attributes[attr] < 200) {
                                             // cdata.push(ClusterData[i]);
-                                            if (ssqy != "" && ssqy == ClusterData[i].attributes["县市区名称"]) {
-                                                cdata.push(ClusterData[i]);
-                                            } else {
-                                                if (sssy == ClusterData[i].attributes["地市名称"]) {
+                                            if (sssy == ClusterData[i].attributes["地市名称"]) {
+                                                // cdata.push(ClusterData[i]);
+                                                if (ssqy != "") {
+                                                    if (ssqy == ClusterData[i].attributes["县市区名称"]) {
+                                                        cdata.push(ClusterData[i]);
+                                                    }
+
+                                                } else {
                                                     cdata.push(ClusterData[i]);
                                                 }
                                             }
@@ -333,19 +369,36 @@
                                     }
                                     break;
                             }
-
-                            showClusterData.push(cdata);
+                            if (cdata.length) {
+                                showClusterData.push(cdata);
+                            } else {
+                                $(".checks span").each(function(){
+                                    if ($(this).text() == types[k]) {
+                                        $(this).prev().attr("data-state", "uncheck");
+                                        $(this).prev().removeClass("active");
+                                        clusterImg.remove($(this).prev().attr("src"));
+                                        clusterType.remove(types[k]);
+                                    }
+                                }) 
+                                alert("暂无数据");
+                            }
                         }
-
+                            
+                        // if
                     }
 
-                    // console.log(showClusterData);
-                    addMultiClusters(showClusterData);
                 }
 
-
-
+                // console.log(showClusterData);
+                if (showClusterData.length) {
+                    addMultiClusters(showClusterData);
+                }
+                    
             }
+
+        
+
+            
             function bindEvt() {
                 //给label绑定点击选中事件
                 $(".checks").find("label").each(function () {
@@ -364,7 +417,7 @@
                             if (map.getLayer("clusters")) {
                                 map.removeLayer(map.getLayer("clusters"));
                             }
-                            //   console.log(clusterType);
+                               console.log(clusterType);
                             getClusterData(clusterType, attrName);
 
                         } else {
@@ -427,8 +480,12 @@
                 });
                 $("#function").click(function () {
                     // $(".content").show();
-                    $("#farmArea").show();
-                    $("#cityArea").hide();
+                    if (ssqy != "" || sssy != "") {
+                        $("#farmArea").show();
+                        $("#cityArea").hide();
+                    } else {
+                        alert("请选择区域！");
+                    }
                     $(".content>img").click(function () {
                         $(".content").hide();
                         if (map.getLayer("clusters")) {
@@ -445,18 +502,21 @@
                         ssqy = "";
                         sssy = "";
                         map.infoWindow.hide();
-                        $("#function").hide();
+                       // $("#function").disable();
                         
-                        getsubArea("浙江");
-                        $("#cityArea").show();
+                       // getsubArea("浙江");
+                       // $("#cityArea").show();
                     })
                 })
                 $("#proSelect").on("change", function () {
                     //  console.log($(this).find("option:checked").text());
                     var proName = $(this).find("option:checked").val();
+                    var areaNmae = $(this).find("option:checked").text();
                     $("#cityArea").show();
                     // $(".content").show();
                     getsubArea(proName);
+                    sssy = areaNmae;
+                    ssqy = "";
                     $("#farmArea").hide();
                     $(".content>img").click(function () {
                         $(".content").hide();
@@ -499,8 +559,8 @@
             }
             function getsubArea(i) {
                 //  ResetLayer();
-                sssy = "";
-                ssqy = "";
+                
+               // ssqy = "";
                 var areaId = i;
 
                 if (map != undefined && areaId == "") {
@@ -508,7 +568,7 @@
                 }
 
                 if (areaId == "浙江") {
-                    $("#function").hide();
+                   // $("#function").hide();
                     //  document.getElementById("areaName").innerHTML = "浙江省";
                     // document.getElementById("areaNum").innerHTML = "";
                     var htm = "";
@@ -545,7 +605,7 @@
 
 
                 } else {
-                    $("#function").show();
+                   // $("#function").show();
                     $.ajax({//生成各县级
                         url: 'Json/area.xml',
                         dataType: 'xml',
@@ -608,6 +668,7 @@
 
                 getsubArea($(this).attr("bh"));
                 sssy = $(this).text();
+                ssqy = "";
             }
             //各县点击事件
             function clickArea(xjid, xjname, lat, lng, layerindex, url) {
