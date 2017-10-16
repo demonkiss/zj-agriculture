@@ -723,21 +723,23 @@
                        
                         var secondName = $(this).text();
                         // $(this).children("li").each(function())
-                        var attrName;
+                        var attr_Name;
                         $clazz.map(function (item) {
                             if (item != "active") {
-                                $(".checks").find("." + $clazz).show().siblings("ul").hide();
-                                attrName = $(".checks").find("." + item).attr("value");
-                                console.log(attrName);
+                                var currentCheck = $(".checks").find("." + item);
+                                currentCheck.show().siblings("ul").hide();
+                              //  $(".checks").find("." + $clazz).show().siblings("ul").hide();
+                                attr_Name = $(".checks").find("." + item).attr("value");
+                                console.log(attr_Name);
 
                                 var $types = $(".checks").find("." + item + " label");
                                 //填充数组
                                 // var $types = $(this).parent().children("label");
-                                $types.each(function (e) {
-                                    if ($(this).attr("data-state") == "check") {
-                                        clusterType.push($(this).next().text());
-                                        clusterImg.push($(this).prev().prev().attr("src"));
-                                        layerDType.push("'" + $(this).next().text() + "'");
+                                $types.each(function (i,e) {
+                                    if ($(e).attr("data-state") == "check") {
+                                        clusterType.push($(e).next().text());
+                                        clusterImg.push($(e).prev().prev().attr("src"));
+                                        layerDType.push("'" + $(e).next().text() + "'");
                                     }
                                 })
                             }
@@ -748,7 +750,7 @@
                             visiableArray = layerConfig[nyName][secondName].array;
                             console.log(currenturl);
                         }
-                        var url = layerConfig[nyName].jsondata
+                        var url = layerConfig[nyName].jsondata;
                         $.ajax({
                            
                             url: url,
@@ -769,7 +771,7 @@
                         if (map.getLayer("clusters")) {
                             map.removeLayer(map.getLayer("clusters"));
                         }
-                        getClusterData(clusterType, attrName);
+                        getClusterData(clusterType, attr_Name);
                         var scale = map.getScale();
                         if (scale < 60000) {
                             if (map.getLayer("clusters")) {
@@ -778,10 +780,10 @@
                         }
                         if (sssy != "" && layerDType.length != 0) {
                             var sql = "";
-                            if (attrName != "认定面积") {
-                                sql = "地市名称='" + sssy + "' and " + attrName + " in (" + layerDType.toString() + ")";
+                            if (attr_Name != "认定面积") {
+                                sql = "地市名称='" + sssy + "' and " + attr_Name + " in (" + layerDType.toString() + ")";
                                 if (ssqy != "") {
-                                    sql = "县市区名称='" + ssqy + "'and " + attrName + " in (" + layerDType.toString() + ")";
+                                    sql = "县市区名称='" + ssqy + "'and " + attr_Name + " in (" + layerDType.toString() + ")";
                                 }
                             } else {
                                 var asql = getAreaSql(clusterType);
@@ -1599,9 +1601,9 @@
                         </ul>
                     </li>
                 </ul>
-                <ul class="xdny" style="display: none">
+                <ul class="xdny" value="" style="display: none">
                     <li>
-                        <ul>
+                        <ul> 
                             <li>
                                 <img src="images/province.png">
                                 <input type="checkbox" id="1">
@@ -1617,7 +1619,7 @@
                         </ul>
                     </li>
                 </ul>
-                <ul style="display: none;" class="zdcy">
+                <ul style="display: none;" value="" class="zdcy">
                     <li>
                         <ul>
                             <li>
@@ -1701,7 +1703,7 @@
                         </ul>
                     </li>
                 </ul>
-                <ul style="display: none;" class="tsny">
+                <ul style="display: none;" value="" class="tsny">
                     <li>
                         <ul>
                             <li>
@@ -1785,7 +1787,7 @@
                         </ul>
                     </li>
                 </ul>
-                <ul class="cgxm" style="display: none">
+                <ul class="cgxm" value="" style="display: none">
                     <li>
                         <ul>
                             <li>
@@ -1809,7 +1811,7 @@
                         </ul>
                     </li>
                 </ul>
-                <ul class="bznt" style="display: none">
+                <ul class="bznt" value="" style="display: none">
                     <li>
                         <ul>
                             <li>
@@ -1821,7 +1823,7 @@
                         </ul>
                     </li>
                 </ul>
-                <ul class="cbxm" style="display: none">
+                <ul class="cbxm" value="" style="display: none">
                     <li>
                         <ul>
                             <li>
@@ -1845,7 +1847,7 @@
                         </ul>
                     </li>
                 </ul>
-                <ul class="tsgc" style="display: none">
+                <ul class="tsgc" value="" style="display: none">
                     <li>
                         <ul>
                             <li>
