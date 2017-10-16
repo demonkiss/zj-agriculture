@@ -59,11 +59,11 @@ html,body{
     position: absolute;
     left:40px;
     top:75px;
-    overflow: hidden;
+    /*overflow: hidden;*/
     z-index: 1000;
 }
 .left .top{
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 .left .control li{
     cursor: pointer;
@@ -78,6 +78,7 @@ html,body{
     font-size: 14px;
     margin: 0 0 0 12px;
     width: 233px;
+    height:42px;
     padding: 12px 0 14px 0;
 }
 .left .top>div:nth-child(1) input:focus{
@@ -87,7 +88,7 @@ html,body{
     margin: 12px 12px 0 0;
 }
 .left .top>div:nth-child(2){
-    width: 190px;
+    width: 210px;
     height: 42px;
     background: url("images/bac1.png");
     background-size: 100% 100%;
@@ -97,7 +98,7 @@ html,body{
 
 }
 .left .top>div:nth-child(2) select{
-    width: 50px;
+    width: 70px;
     border: none;
     margin: 11px 0 0 12px;
     color: #3d93fd;
@@ -110,7 +111,7 @@ html,body{
 }
 .left .top>div:nth-child(2) img:nth-child(2){
     position: absolute;
-    left: 50px;
+    left: 70px;
     top: 18px;
 }
 .left .top>div:nth-child(2) span:nth-child(4){
@@ -119,12 +120,12 @@ html,body{
     margin: 11px 0 0 12px;
     cursor: pointer;
 }
-.left .top>div:nth-child(2) span img{
+/*.left .top>div:nth-child(2) span img{
     float: right;
     margin-top: 4px;
-}
+}*/
 .left .content{
-    margin-top: 8px;
+    margin-top: 50px;
     border-radius: 4px;
 }
 .left .content>div:nth-child(2){
@@ -271,6 +272,37 @@ html,body{
     position: relative;
     top: 0;
 }
+/*===*/
+#proSelect {
 
+    min-width:80px;
+    width:80px;
+}
+#proSelect li{
+        /*padding-left:14px;
+    padding-top:5px;*/
+}
 
-
+.sel-fun {
+    width: 210px;
+    height: 42px;
+    background: url("images/bac1.png");
+    background-size: 100% 100%;
+    font-size: 14px;
+    color: #3d93fd;
+    position: relative;
+    float:right;
+}
+.sel-fun button{
+    border:none;
+    height:42px;
+}
+.sel-fun span{
+    color: #3d93fd;
+}
+.function{
+    cursor:pointer;
+}
+#function img{
+    margin-left:8px;
+}

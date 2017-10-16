@@ -106,6 +106,7 @@
     <Content Include="extras\ClusterLayer.js" />
     <Content Include="findDK.html" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="HtmlPage1.html" />
     <Content Include="images\angleLeft.png" />
     <Content Include="images\dibubg.png" />
     <Content Include="images\dq_nylq.jpg" />
@@ -173,6 +174,8 @@
     <Content Include="index1.html" />
     <Content Include="Javascript\ArcGISAPI\3.16\dojo\dojo.js" />
     <Content Include="Javascript\ArcGISAPI\3.16\TDTLayer2.js" />
+    <Content Include="Javascript\config\config.js" />
+    <Content Include="Javascript\config\layerConfig.js" />
     <Content Include="Javascript\Framework\code2info.js" />
     <Content Include="Javascript\Framework\Config.js" />
     <Content Include="Javascript\Framework\field_keys.js" />
@@ -484,6 +487,7 @@
     <Content Include="Json\area.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="loadTDT.html" />
     <Content Include="Main_Map.htm" />
     <Content Include="Main_Map.js" />
     <Content Include="index.html" />
@@ -553,6 +557,8 @@
     <Content Include="Json\药店.json" />
     <Content Include="Json\multiType.json" />
     <Content Include="Json\ls.json" />
+    <Content Include="Json\粮食生产功能区.json" />
+    <Content Include="Json\china.json" />
     <None Include="Properties\PublishProfiles\IAGIS.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
