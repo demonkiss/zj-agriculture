@@ -8,8 +8,10 @@
     <link href="Javascript/ArcGISAPI/3.16/dijit/themes/tundra/tundra.css" rel="stylesheet" />
     <!--<link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">-->
     <link href="Javascript/ArcGISAPI/3.16/esri/css/esri.css" rel="stylesheet" />
+
     <link href="css/base.css" rel="stylesheet" />
     <link href="css/gisframe.css" rel="stylesheet" />
+    <link href="style/bootstrap.css" rel="stylesheet" />
     <!--<link href="css/layout.css" rel="stylesheet" />-->
     <style>
         html, body {
@@ -29,11 +31,37 @@
             margin: 0 auto !important;
         }
 
+        .gradient {
+            background: #00f;
+            background: -moz-linear-gradient(top, #0050ff 0%, #ffffff 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0050ff), color-stop(100%,#ffffff));
+            background: -webkit-linear-gradient(top, #0050ff 0%,#ffffff 100%);
+            background: -o-linear-gradient(top, #0050ff 0%,#ffffff 100%);
+            background: -ms-linear-gradient(top, #0050ff 0%,#ffffff 100%);
+            background: linear-gradient(to bottom, #0050ff 0%,#ffffff 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0050ff', endColorstr='#ffffff',GradientType=0 );
+        }
+
+        :root .gradient {
+            filter: none;
+        }
+
         text {
             stroke: #f00;
             stroke-width: 5px;
             -webkit-text-stroke: 2px red;
-            text-shadow: 0 1px white, 1px 0 white, -1px 0 white, 0 -1px white;
+            -ms-text-shadow: 0 1px white, 1px 0 white, -1px 0 white, 0 -1px white;
+            /*-webkit-text-shadow: 0 1px white, 1px 0 white, -1px 0 white, 0 -1px white;*/
+            /*filter: Glow(color=#fff,strength=5);*/
+            filter: progid:DXImageTransform.Microsoft.Shadow(color=#fff,direction=45);
+        }
+
+        text {
+            color: #000;
+            text-shadow: #fff 1px 0 0,#fff 0 1px 0,#fff -1px 0 0,#fff 0 -1px 0;
+            -webkit-text-shadow: #fff 1px 0 0,#fff 0 1px 0,#fff -1px 0 0,#fff 0 -1px 0;
+            -moz-text-shadow: #fff 1px 0 0,#fff 0 1px 0,#fff -1px 0 0,#fff 0 -1px 0;
+            *filter: Glow(color=#fff, strength=1);
         }
     </style>
 
@@ -67,7 +95,8 @@
     </script>
     <!--<script src="https://js.arcgis.com/3.20/"></script>-->
     <script src="Javascript/lib/jquery-2.1.4.js"></script>
-
+    <script src="Javascript/lib/bootstrap.js"></script>
+    <script src="Javascript/config/layerConfig.js"></script>
     <script src="Javascript/ArcGISAPI/3.16/init.js"></script>
     <script>
         var map;
@@ -75,9 +104,14 @@
         var showClusterData = [];
         var clusterType = [];
         var clusterImg = [];
+        var layerDType = [];
         var textColor = "#000";
         var sssy = "";
         var ssqy = "";
+        var currenturl = "";
+        var visiableArray;
+        var areasql = [];
+        //  var lslayer;
         require([
           "dojo/parser",
           "dojo/ready",
@@ -85,7 +119,7 @@
           "esri/Color",
           "dojo/dom-style",
           "dojo/query",
-
+          "esri/layers/ImageParameters",
           "esri/map",
           "esri/request",
           "esri/graphic",
@@ -112,7 +146,7 @@
           "dijit/layout/ContentPane",
           "dojo/domReady!"
         ], function (
-          parser, ready, arrayUtils, Color, domStyle, query,
+          parser, ready, arrayUtils, Color, domStyle, query, ImageParameters,
           Map, esriRequest, Graphic, Extent,
           SimpleMarkerSymbol, SimpleFillSymbol, PictureMarkerSymbol, ClassBreaksRenderer,
           GraphicsLayer, SpatialReference, PopupTemplate, Point, webMercatorUtils, ArcGISDynamicMapServiceLayer, TDTLayer, TDTLayer_Anno,
@@ -138,16 +172,17 @@
                 //   center: [119.789, 29.543],
                 //  zoom: 9
             });
-            var lsLayer = new ArcGISDynamicMapServiceLayer("http://localhost:6080/arcgis/rest/services/lsService/MapServer");
+            currenturl = "http://localhost:6080/arcgis/rest/services/ls_2000/MapServer";
+            var lsLayer2 = new ArcGISDynamicMapServiceLayer(currenturl, { id: "ls" });
             var layer = new TDTLayer("img");//影像img 矢量 vec
             map.addLayer(layer, 0);
             var annolayer = new TDTLayer_Anno("cia");//影像cia 矢量cva
             //  map.addLayer(annolayer, 1);
-            map.addLayer(lsLayer);
-            lsLayer.hide();
+            // map.addLayer(lsLayer2);
+            //  lsLayer.hide();
             $(function () {
                 $.ajax({
-                    url: "Json/经纬度2000.json",
+                    url: "Json/粮食生产功能区.json",
                     dataType: 'json',
                     type: "GET",
                     async: false,
@@ -222,14 +257,32 @@
                 var currentScale = map.getScale();
                 // console.log('Scale: ' + currentScale);
                 if (currentScale > 60000) {
-                    lsLayer.hide();
-                    //if (map.getLayer(lsLayer)) {
-                    //   // lsLayer.hide();
-                    //    map.removeLayer(lsLayer);
+                    //  lsLayer.hide();
+                    if (map.getLayer("ls")) {
+                        map.getLayer("ls").hide();
+                        // lsLayer.hide();
+                        // map.removeLayer(map.getLayer("ls"));
+                    }
+                    if (map.getLayer("clusters")) {
+                        map.getLayer("clusters").show();
+                    }
+                } else {
+                    if (map.getLayer("clusters")) {
+                        map.getLayer("clusters").hide();
+                    }
+                    if (map.getLayer("ls")) {
+                        map.getLayer("ls").show();
+                    }
+
+                    //if (sssy != "") {
+                    //    var sql = "\"地市名称\"='"+ sssy + "'";
+                    //    if (ssqy != "") {
+                    //        sql = "\"县市区名称\"='" + ssqy + "'";
+                    //    }
+                    //    addDynamicLayer(sql);
                     //}
 
-                } else {
-                    lsLayer.show();
+                    //   lsLayer.show();
                     // map.addLayer(lsLayer);
                 }
 
@@ -252,6 +305,48 @@
 
             //    });
             //})
+            function addDynamicLayer(layersql) {
+                var imageParameters = new ImageParameters();
+                //  imageParameters.layerIds = [0];
+                imageParameters.layerIds = visiableArray;
+                imageParameters.layerOption = ImageParameters.LAYER_OPTION_SHOW;
+                imageParameters.transparent = true;
+
+                var layerDefs = [];
+                layerDefs[visiableArray[0]] = layersql;
+                
+                //  console.log(layersql);
+                //  console.log("\"地市名称\"='杭州市'");
+                // layerDefs[0] = "\"地市名称\"='杭州市'";
+                // layerDefs[0] = "OBJECTID='8'";
+
+                imageParameters.layerDefinitions = layerDefs;
+                //imageParameters.layerDefinitions = [layersql];
+
+                var rmap = map.getLayer("ls");
+                if (rmap) {
+                    map.removeLayer(rmap);
+                    if ($("#map_ls")) {
+                        $("#map_ls").remove();
+                    }
+                }
+                //   currenturl= "http://localhost:6080/arcgis/rest/services/ls_2000/MapServer";
+                var lslayer = new ArcGISDynamicMapServiceLayer(currenturl, { "imageParameters": imageParameters, "id": "ls", "opacity": 0.6 });
+                map.addLayer(lslayer, 3);
+                lslayer.setVisibleLayers(visiableArray);
+                var scale = map.getScale();
+                // console.log(scale);
+                if (scale > 60000) {
+
+                    map.getLayer("ls").hide();
+                }
+                else {
+                    map.getLayer("ls").show();
+                }
+
+
+            }
+
             function getClusterData(types, attr) {
                 if (ClusterData) {
                     showClusterData.length = 0;
@@ -266,12 +361,12 @@
                                             if (ssqy == ClusterData[i].attributes["县市区名称"]) {
                                                 cdata.push(ClusterData[i]);
                                             }
-                                            
+
                                         } else {
                                             cdata.push(ClusterData[i]);
                                         }
                                     }
-                                    
+
 
                                 }
                             }
@@ -279,18 +374,19 @@
                                 showClusterData.push(cdata);
                             }
                             else {
-                                $(".checks span").each(function(){
+                                $(".checks span").each(function () {
                                     if ($(this).text() == types[k]) {
                                         $(this).prev().attr("data-state", "uncheck");
                                         $(this).prev().removeClass("active");
 
                                         clusterImg.remove($(this).prev().attr("src"));
                                         clusterType.remove(types[k]);
+                                        layerDType.remove("'" + types[k] + "'");
                                     }
-                                }) 
+                                })
                                 alert("暂无数据");
                             }
-                            
+
                         }
                     } else {
                         for (var k = 0; k < types.length; k++) {
@@ -313,6 +409,7 @@
                                             // cdata.push(ClusterData[i]);
                                         }
                                     }
+
                                     break;
                                 case "500~1000亩":
                                     for (var i = 0; i < ClusterData.length; i++) {
@@ -372,18 +469,19 @@
                             if (cdata.length) {
                                 showClusterData.push(cdata);
                             } else {
-                                $(".checks span").each(function(){
+                                $(".checks span").each(function () {
                                     if ($(this).text() == types[k]) {
                                         $(this).prev().attr("data-state", "uncheck");
                                         $(this).prev().removeClass("active");
                                         clusterImg.remove($(this).prev().attr("src"));
                                         clusterType.remove(types[k]);
+                                        layerDType.remove("'" + types[k] + "'");
                                     }
-                                }) 
+                                })
                                 alert("暂无数据");
                             }
                         }
-                            
+
                         // if
                     }
 
@@ -393,13 +491,78 @@
                 if (showClusterData.length) {
                     addMultiClusters(showClusterData);
                 }
-                    
+
             }
 
-        
 
-            
+
+
             function bindEvt() {
+                //空间分析工具事件
+                var toorbarState = false;
+                $("#toorbars").click(function (e) {
+                    $("#Analyse-tools").toggle("slow");
+                    if (toorbarState) {
+                        $("#toorbars img").attr("src", "images/Ntool.png");
+                        toorbarState = false;
+                    } else {
+                        $("#toorbars img").attr("src", "images/Ntool2.png");
+                        toorbarState = true;
+                    }
+
+                }
+                )
+                $("#Analyse-tools li").click(function (e) {
+                    var evt = e.currentTarget.childNodes[0].alt;
+                    $("#Analyse-tools span").css("color", "#000");
+                    $(this).children("span").css("color", "#0094ff");
+                    switch (evt) {
+
+                        case "框选查询":
+                            if (currentLayerServiceUrl != "") {
+                                drawState = 0;
+                                toolbar.activate(esri.toolbars.Draw.RECTANGLE);
+                                map.setMapCursor("crosshair");
+                            } else {
+                                alert("请切换到县级");
+                                $(this).children("span").css("color", "#000");
+                            }
+                            break;
+                        case "测量距离":
+                            drawState = 1;
+                            if (iQueryDk) {
+                                iQueryDk.remove();
+                                iQueryDk = "";
+                            }
+
+                            toolbar.activate(esri.toolbars.Draw.POLYLINE);
+                            map.setMapCursor("crosshair");
+                            break;
+                        case "测量面积":
+                            drawState = 1;
+                            if (iQueryDk) {
+                                iQueryDk.remove();
+                                iQueryDk = "";
+                            }
+                            toolbar.activate(esri.toolbars.Draw.POLYGON);
+                            map.setMapCursor("crosshair");
+                            break;
+                        case "统计分析":
+                            if (toolbar) {
+                                toolbar.deactivate();
+                            }
+                            //  addChartToMap();
+                            // $("#Spatial").css("display", "block");
+                            break;
+                        case "清除高亮":
+                            ClearMap();
+                            hidePanel();
+                            $("#Analyse-tools span").css("color", "#000");
+                            break;
+
+                    }
+
+                })
                 //给label绑定点击选中事件
                 $(".checks").find("label").each(function () {
                     $(this).on("click", function () {
@@ -411,32 +574,112 @@
 
                             // $('#left').children(':visible');
 
-
                             clusterType.push($(this).next().text());
+                            layerDType.push("'" + $(this).next().text() + "'");
                             clusterImg.push($(this).prev().prev().attr("src"));
+                            var scale = map.getScale();
                             if (map.getLayer("clusters")) {
                                 map.removeLayer(map.getLayer("clusters"));
                             }
-                               console.log(clusterType);
+
                             getClusterData(clusterType, attrName);
+                            if (scale < 60000) {
+                                if (map.getLayer("clusters")) {
+                                    map.getLayer("clusters").hide();
+                                }
+                            }
+
+
+
+
+                            if (sssy != "" && clusterType.length != 0) {
+                                //var sql = "地市名称='" + sssy + "' and " + attrName + " in (" + layerDType.toString() + ")";
+                                //if (ssqy != "") {
+                                //    sql = "县市区名称='" + ssqy + "'and " + attrName + " in (" + layerDType.toString() + ")";
+                                //}
+                                // console.log(sql);
+                                var sql = "";
+                                if (attrName != "认定面积") {
+                                    sql = "地市名称='" + sssy + "' and " + attrName + " in (" + layerDType.toString() + ")";
+                                    if (ssqy != "") {
+                                        sql = "县市区名称='" + ssqy + "'and " + attrName + " in (" + layerDType.toString() + ")";
+                                    }
+                                } else {
+                                    var asql = getAreaSql(clusterType);
+                                    console.log(asql);
+                                    sql = "地市名称='" + sssy + "' and " + asql;
+                                    if (ssqy != "") {
+                                        sql = "县市区名称='" + ssqy + "'and " + asql;
+                                    }
+                                }
+                                addDynamicLayer(sql);
+                            }
+                            var scale = map.getScale();
+                            console.log(scale);
+
+
+
+
+
+                            // addDynamicLayer(sql);
 
                         } else {
                             $(this).attr("data-state", "uncheck");
                             $(this).removeClass("active");
                             clusterImg.remove($(this).prev().prev().attr("src"));
                             clusterType.remove($(this).next().text());
+                            layerDType.remove("'" + $(this).next().text() + "'");
+                            var scale = map.getScale();
                             if (map.getLayer("clusters")) {
                                 map.removeLayer(map.getLayer("clusters"));
                             }
-                            // console.log(clusterType);
+
                             getClusterData(clusterType, attrName);
+                            if (scale < 60000) {
+                                if (map.getLayer("clusters")) {
+                                    map.getLayer("clusters").hide();
+                                }
+                            }
+
+
+                            // console.log(clusterType);
+
+
+                            if (sssy != "" && layerDType.length != 0) {
+                                //var sql = "地市名称='" + sssy + "' and " + attrName + " in (" + layerDType.toString() + ")";
+                                //if (ssqy != "") {
+                                //    sql = "县市区名称='" + ssqy + "'and " + attrName + " in (" + layerDType.toString() + ")";
+                                //}
+                                var sql = "";
+                                if (attrName != "认定面积") {
+                                    sql = "地市名称='" + sssy + "' and " + attrName + " in (" + layerDType.toString() + ")";
+                                    if (ssqy != "") {
+                                        sql = "县市区名称='" + ssqy + "'and " + attrName + " in (" + layerDType.toString() + ")";
+                                    }
+                                } else {
+                                    var asql = getAreaSql(clusterType);
+                                    console.log(asql);
+                                    sql = "地市名称='" + sssy + "' and " + asql;
+                                    if (ssqy != "") {
+                                        sql = "县市区名称='" + ssqy + "'and " + asql;
+                                    }
+                                }
+                                console.log(sql);
+                                addDynamicLayer(sql);
+                            } else {
+                                if (map.getLayer("ls")) {
+                                    map.removeLayer(map.getLayer("ls"));
+                                }
+                            }
+
+
                         }
                         $(this).prev().trigger("click");
                     })
                 });
                 //切换选择部分的js
                 $(".btns").on("click", "li", function () {
-                    clusterType.length = 0;
+                    // clusterType.length = 0;
                     $(this).addClass("active").siblings().removeClass("active");
                     var $index = $(this).index();
                     $(".content .control").find("ul.second").eq($index).show().siblings("ul.second").hide();
@@ -451,14 +694,27 @@
                         // alert(3);
                         clusterType.length = 0;
                         clusterImg.length = 0;
+                        layerDType.length = 0;
                         $(this).addClass("active").siblings().removeClass("active");
                         var $clazz = $(this).attr("class");
                         $clazz = $clazz.split(" ");
+                        var nyName;
+                        $(".btns li").each(function (i, e) {
+                            if ($(e).hasClass("active")) {
+                                nyName = $(e).text();
+
+                            }
+
+                        })
+                        var secondName = $(this).text();
+                        // $(this).children("li").each(function())
                         var attrName;
                         $clazz.map(function (item) {
                             if (item != "active") {
                                 $(".checks").find("." + $clazz).show().siblings("ul").hide();
                                 attrName = $(".checks").find("." + item).attr("value");
+                                console.log(attrName);
+
                                 var $types = $(".checks").find("." + item + " label");
                                 //填充数组
                                 // var $types = $(this).parent().children("label");
@@ -466,20 +722,61 @@
                                     if ($(this).attr("data-state") == "check") {
                                         clusterType.push($(this).next().text());
                                         clusterImg.push($(this).prev().prev().attr("src"));
+                                        layerDType.push("'" + $(this).next().text() + "'");
                                     }
                                 })
                             }
                         })
-                        console.log(clusterType);
+                        console.log(nyName + "," + secondName);
+                        if (nyName && secondName) {
+                            currenturl = layerConfig[nyName][secondName].url;
+                            visiableArray = layerConfig[nyName][secondName].array;
+                            console.log(currenturl);
+                        }
+
+                        // alert(currenturl);
+                        // console.log(clusterType);
                         if (map.getLayer("clusters")) {
                             map.removeLayer(map.getLayer("clusters"));
                         }
                         getClusterData(clusterType, attrName);
+                        var scale = map.getScale();
+                        if (scale < 60000) {
+                            if (map.getLayer("clusters")) {
+                                map.getLayer("clusters").hide();
+                            }
+                        }
+                        if (sssy != "" && layerDType.length != 0) {
+                            var sql = "";
+                            if (attrName != "认定面积") {
+                                sql = "地市名称='" + sssy + "' and " + attrName + " in (" + layerDType.toString() + ")";
+                                if (ssqy != "") {
+                                    sql = "县市区名称='" + ssqy + "'and " + attrName + " in (" + layerDType.toString() + ")";
+                                }
+                            } else {
+                                var asql = getAreaSql(clusterType);
+                                console.log(asql);
+                                sql = "地市名称='" + sssy + "' and " + asql;
+                                if (ssqy != "") {
+                                    sql = "县市区名称='" + ssqy + "'and " + asql;
+                                }
+                            }
+
+                            // console.log(sql);
+                            addDynamicLayer(sql);
+                        } else {
+                            if (map.getLayer("ls")) {
+                                map.removeLayer(map.getLayer("ls"));
+                            }
+                        }
 
                     })
                 });
                 $("#function").click(function () {
                     // $(".content").show();
+                    currenturl = layerConfig["粮食生产功能区"]["功能区级别"].url;
+                    visiableArray = layerConfig["粮食生产功能区"]["功能区级别"].array;
+                    // console.log(currenturl);
                     if (ssqy != "" || sssy != "") {
                         $("#farmArea").show();
                         $("#cityArea").hide();
@@ -495,28 +792,54 @@
                         $(".checks").find("label").each(function () {
                             $(this).attr("data-state", "uncheck");
                             $(this).removeClass("active");
-                            
+
                         })
                         clusterImg.length = 0;
                         clusterType.length = 0;
+                        layerDType.length = 0;
+                        $(".sel-fun button").text("浙江");
+                        $(".sel-fun button").append("<span class=\"caret\"></span>")
                         ssqy = "";
                         sssy = "";
                         map.infoWindow.hide();
-                       // $("#function").disable();
-                        
-                       // getsubArea("浙江");
-                       // $("#cityArea").show();
+                        // $("#function").disable();
+
+                        // getsubArea("浙江");
+                        // $("#cityArea").show();
                     })
                 })
+                $("#proSelect a").click(function () {
+
+                    var proName = $(this).attr("value");
+                    var areaNmae = $(this).text();
+                    // alert(proName + ";" + areaNmae);
+                    // alert($(".sel-fun button").text());
+                    $(".sel-fun button").text(areaNmae);
+                    $(".sel-fun button").append("<span class=\"caret\"></span>")
+                    $("#cityArea").show();
+                    // $(".content").show();
+                    sssy = areaNmae;
+                    ssqy = "";
+                    getsubArea(proName);
+
+                    $("#farmArea").hide();
+                    $(".content>img").click(function () {
+                        $(".content").hide();
+
+
+                    })
+                })
+
                 $("#proSelect").on("change", function () {
                     //  console.log($(this).find("option:checked").text());
                     var proName = $(this).find("option:checked").val();
                     var areaNmae = $(this).find("option:checked").text();
                     $("#cityArea").show();
                     // $(".content").show();
-                    getsubArea(proName);
                     sssy = areaNmae;
                     ssqy = "";
+                    getsubArea(proName);
+
                     $("#farmArea").hide();
                     $(".content>img").click(function () {
                         $(".content").hide();
@@ -557,10 +880,41 @@
                 //县级事件
                 $("#cityArea .control").on("click", ".xj", "", clickArea);
             }
+            function getAreaSql(types) {
+                areasql.length = 0;
+                for (var k = 0; k < types.length; k++) {
+                    var cdata = [];
+                    switch (types[k]) {
+                        case "大于1000亩":
+                            areasql.push("认定面积>1000");
+                            break;
+                        case "500~1000亩":
+                            areasql.push("认定面积>500 and 认定面积<=1000");
+                            break;
+                        case "200~500亩":
+                            areasql.push("认定面积>200 and 认定面积<=5000");
+                            break;
+                        case "小于200亩":
+                            areasql.push("认定面积<200");
+                            break;
+                    }
+                }
+                var sql="";
+
+                for (var i = 0; i < areasql.length; i++) {
+                    
+                    if (i == areasql.length - 1) {
+                        sql += areasql[i];
+                    } else {
+                        sql += areasql[i] + " or ";
+                    }
+                }
+                return sql;
+            }
             function getsubArea(i) {
                 //  ResetLayer();
-                
-               // ssqy = "";
+
+                // ssqy = "";
                 var areaId = i;
 
                 if (map != undefined && areaId == "") {
@@ -568,7 +922,7 @@
                 }
 
                 if (areaId == "浙江") {
-                   // $("#function").hide();
+                    // $("#function").hide();
                     //  document.getElementById("areaName").innerHTML = "浙江省";
                     // document.getElementById("areaNum").innerHTML = "";
                     var htm = "";
@@ -605,7 +959,10 @@
 
 
                 } else {
-                   // $("#function").show();
+                    // $("#function").show();
+                    //var sql = "\"地市名称\"='" + sssy + "'";
+                    //addDynamicLayer(sql);
+
                     $.ajax({//生成各县级
                         url: 'Json/area.xml',
                         dataType: 'xml',
@@ -665,10 +1022,16 @@
                 // onclick = 'clickSArea(" + id + ")'
                 // $("#areaId").val(i);
                 // ResetLayer();
-
-                getsubArea($(this).attr("bh"));
                 sssy = $(this).text();
+                var areaNmae = $(this).text();
+                // alert(proName + ";" + areaNmae);
+                // alert($(".sel-fun button").text());
+                $(".sel-fun button").text(areaNmae);
+                $(".sel-fun button").append("<span class=\"caret\"></span>")
                 ssqy = "";
+                getsubArea($(this).attr("bh"));
+
+
             }
             //各县点击事件
             function clickArea(xjid, xjname, lat, lng, layerindex, url) {
@@ -677,13 +1040,22 @@
                 var xjid = $(this).attr("xjid");
                 var xjname = $(this).attr("xjname");
                 var lat = $(this).attr("xjlat");
-                var lna = $(this).attr("xjlna");
+                var lng = $(this).attr("xjlng");
 
                 if (map != undefined) {
-                    //  map.centerAndZoom([lat, lng], 11);
+                    var zoom = map.getZoom();
+                    map.centerAndZoom([parseFloat(lat), parseFloat(lng)], zoom);
                     //sj_layer.setVisibleLayers([layerindex]);
                 }
                 ssqy = xjname;
+                var areaNmae = $(this).text();
+                // alert(proName + ";" + areaNmae);
+                // alert($(".sel-fun button").text());
+                $(".sel-fun button").text(areaNmae);
+                $(".sel-fun button").append("<span class=\"caret\"></span>")
+
+
+
                 //如果按下的pt
                 if ($("#xjtd" + xjid).hasClass("ptdown")) {
                     $(".ptdown").each(function (index, ele) {
@@ -977,14 +1349,36 @@
 </head>
 
 <body>
+
     <div class="left">
         <div class="top">
             <div class="fl">
                 <input type="text" placeholder="输入关键词">
                 <a href="javascript:void (0)" class="fr"><img src="images/search.png"></a>
             </div>
-            <div class="fr">
-                <select name="" id="proSelect" class="province">
+
+            <div class="sel-fun">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle"
+                            data-toggle="dropdown">
+                        浙江 <span class="caret"></span>
+                    </button>
+                    <ul name="" id="proSelect" role="menu" class="dropdown-menu province" aria-labelledby="dropdownMenu1">
+                        <li><a href="#" value="浙江">浙江</a></li>
+                        <li><a href="#" value="3301">杭州市</a></li>
+                        <li><a href="#" value="3302">宁波市</a></li>
+                        <li><a href="#" value="3303">温州市</a></li>
+                        <li><a href="#" value="3304">嘉兴市</a></li>
+                        <li><a href="#" value="3305">湖州市</a></li>
+                        <li><a href="#" value="3306">绍兴市</a></li>
+                        <li><a href="#" value="3307">金华市</a></li>
+                        <li><a href="#" value="3308">衢州市</a></li>
+                        <li><a href="#" value="3309">舟山市</a></li>
+                        <li><a href="#" value="3310">台州市</a></li>
+                        <li><a href="#" value="3311">丽水市</a></li>
+                    </ul>
+                </div>
+                <!--<select name="" id="proSelect" class="province">
                     <option value="浙江">浙江</option>
                     <option value="3301">杭州市</option>
                     <option value="3302">宁波市</option>
@@ -997,11 +1391,12 @@
                     <option value="3309">舟山市</option>
                     <option value="3310">台州市</option>
                     <option value="3311">丽水市</option>
-                </select>
-                <img src="images/select.png">
+                </select>-->
+                <!--<img src="images/select.png">-->
                 <span>450个</span>
                 <span class="function" id="function">功能<img src="images/function.png"></span>
             </div>
+
         </div>
         <div id="farmArea" class="content" style="display: none">
             <img src="images/close.png" class="fr">
@@ -1512,7 +1907,17 @@
              data-dojo-props="region:'center'">
         </div>
     </div>
-    <!--切换底图-->
+    <div id="toorbars" title="常用工具"><img src="images/Ntool.png" /></div>
+    <div id="Analyse-tools" class="btn-group" role="group" style="position:absolute;display:none">
+        <ul>
+            <li><img src="img/tools/MQuery.png" alt="框选查询" title="框选查询" /><span>框选查询</span></li>
+            <!--<li><img src="img/tools/Statistics.png" alt="统计分析" title="统计分析" /><span>统计分析</span></li>-->
+            <li><img src="img/tools/MeasureLength.png" alt="测量距离" title="测量距离" /><span>测量距离</span></li>
+            <li><img src="img/tools/MeasureArea.png" alt="测量面积" title="测量面积" /><span>测量面积</span></li>
+
+            <li><img src="img/tools/ClearGraphic.png" alt="清除高亮" title="清除高亮" /><span>清除高亮</span></li>
+        </ul>
+    </div><!--切换底图-->
     <div class="MapMenu">
         <a href="javascript:void(0)" title="矢量地图" class="Mapmap"></a>
         <a href="javascript:void(0)" title="影像地图" class="Mapsatellite1"></a>
