@@ -349,6 +349,7 @@
 
             function getClusterData(types, attr) {
                 if (ClusterData) {
+                    console.log(ClusterData);
                     showClusterData.length = 0;
                     if (attr != "认定面积") {
                         for (var k = 0; k < types.length; k++) {
@@ -683,6 +684,7 @@
                     $(this).addClass("active").siblings().removeClass("active");
                     var $index = $(this).index();
                     $(".content .control").find("ul.second").eq($index).show().siblings("ul.second").hide();
+
                     $(".control").find("ul.second").eq($index).find("li").eq(0).trigger("click");
 
                     // alert(2);
@@ -695,6 +697,18 @@
                         clusterType.length = 0;
                         clusterImg.length = 0;
                         layerDType.length = 0;
+
+                        var rmap = map.getLayer("ls");
+                        if (rmap) {
+                            map.removeLayer(rmap);
+                            if ($("#map_ls")) {
+                                $("#map_ls").remove();
+                            }
+                        }
+                        if (map.getLayer("clusters")) {
+                            map.removeLayer(map.getLayer("clusters"));
+                        }
+                     
                         $(this).addClass("active").siblings().removeClass("active");
                         var $clazz = $(this).attr("class");
                         $clazz = $clazz.split(" ");
@@ -706,6 +720,7 @@
                             }
 
                         })
+                       
                         var secondName = $(this).text();
                         // $(this).children("li").each(function())
                         var attrName;
@@ -733,7 +748,22 @@
                             visiableArray = layerConfig[nyName][secondName].array;
                             console.log(currenturl);
                         }
+                        var url = layerConfig[nyName].jsondata
+                        $.ajax({
+                           
+                            url: url,
+                            dataType: 'json',
+                            type: "GET",
+                            async: false,
+                            data: {},
+                            success: function (data) {
+                                // pointData = data;
+                                ClusterData = data.features;
+                                //  addClusters(data);
 
+                            }
+
+                        });
                         // alert(currenturl);
                         // console.log(clusterType);
                         if (map.getLayer("clusters")) {

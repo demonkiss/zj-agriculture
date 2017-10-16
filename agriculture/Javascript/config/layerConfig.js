@@ -1,5 +1,6 @@
 ﻿var layerConfig = {
     "粮食生产功能区": {
+        "jsondata": "Json/粮食生产功能区.json",
         "功能区级别": {
             "url": "http://localhost:6080/arcgis/rest/services/lsService/MapServer",
             "array":[0],
@@ -42,7 +43,8 @@
             }
         }
     },
-    "现代农业园": {
+    "现代农业园区": {
+        "jsondata": "Json/粮食生产功能区.json",
         "现代农业综合区": {
             "url": "http://localhost:6080/arcgis/rest/services/ls_2000/MapServer",
             "array": [0],
@@ -69,7 +71,9 @@
                 "食用菌类": ""
             }
         }
-    }, "标准农田": {
+    },
+    "标准农田": {
+        "jsondata": "Json/20000json.json",
         "千万亩工程项目": {
             "url": "http://localhost:6080/arcgis/rest/services/ls_2000/MapServer",
             "array": [0],
