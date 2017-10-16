@@ -305,6 +305,7 @@
 
             //    });
             //})
+            //添加动态图层
             function addDynamicLayer(layersql) {
                 var imageParameters = new ImageParameters();
                 //  imageParameters.layerIds = [0];
@@ -314,7 +315,7 @@
 
                 var layerDefs = [];
                 layerDefs[visiableArray[0]] = layersql;
-                
+
                 //  console.log(layersql);
                 //  console.log("\"地市名称\"='杭州市'");
                 // layerDefs[0] = "\"地市名称\"='杭州市'";
@@ -346,7 +347,7 @@
 
 
             }
-
+            //添加聚类图层
             function getClusterData(types, attr) {
                 if (ClusterData) {
                     console.log(ClusterData);
@@ -494,8 +495,42 @@
                 }
 
             }
+            //添加浙江边界
+            function addZJBorder() {
+                $.ajax({
+                    url: "Json/city/china.json",
+                    dataType: 'json',
+                    async: true,
+                    data: {},
+                    success: function (data) {
+                        require(["esri/layers/GraphicsLayer", "esri/geometry/Polygon", "esri/symbols/PictureMarkerSymbol", "esri/Color", "esri/graphic", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol"], function (GraphicsLayer, Polygon, PictureMarkerSymbol, Color, Graphic, SimpleLineSymbol, SimpleFillSymbol) {
+                            borderLayer = new GraphicsLayer({ id: "borderLayer" });
 
+                            for (var i = 0; i < data.features.length; i++) {
+                                if (data.features[i].properties.name == "浙江") {
+                                    var polygonJson = {
+                                        "rings": data.features[i].geometry.coordinates,
+                                        "spatialReference": { "wkid": 4326 }
+                                    };
+                                    var polygon = new Polygon(polygonJson);
+                                    var pu = new Polygon(data.features[i].geometry.coordinates);
+                                    var attr = {};
+                                    // var attr = { "name": data.features[i].properties.name, "hospital": data.features[i].properties.hospital };
+                                    var RGB_value = parseInt(166 + parseInt(data.features[i].properties.hospital) * ((166 - 255) / 255));
+                                    var sfs = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 255, 0]), 0.5), new Color([255, 255, 0, 0.8]));
+                                    var graphic = new Graphic(polygon, sfs, attr);
+                                    borderLayer.add(graphic);
+                                }
+                                
 
+                            }
+                            map.addLayer(borderLayer);
+                            
+                            map.setExtent();
+                        })
+                    }
+                })
+            }
 
 
             function bindEvt() {
@@ -708,7 +743,7 @@
                         if (map.getLayer("clusters")) {
                             map.removeLayer(map.getLayer("clusters"));
                         }
-                     
+
                         $(this).addClass("active").siblings().removeClass("active");
                         var $clazz = $(this).attr("class");
                         $clazz = $clazz.split(" ");
@@ -720,7 +755,7 @@
                             }
 
                         })
-                       
+
                         var secondName = $(this).text();
                         // $(this).children("li").each(function())
                         var attr_Name;
@@ -728,14 +763,14 @@
                             if (item != "active") {
                                 var currentCheck = $(".checks").find("." + item);
                                 currentCheck.show().siblings("ul").hide();
-                              //  $(".checks").find("." + $clazz).show().siblings("ul").hide();
+                                //  $(".checks").find("." + $clazz).show().siblings("ul").hide();
                                 attr_Name = $(".checks").find("." + item).attr("value");
                                 console.log(attr_Name);
 
                                 var $types = $(".checks").find("." + item + " label");
                                 //填充数组
                                 // var $types = $(this).parent().children("label");
-                                $types.each(function (i,e) {
+                                $types.each(function (i, e) {
                                     if ($(e).attr("data-state") == "check") {
                                         clusterType.push($(e).next().text());
                                         clusterImg.push($(e).prev().prev().attr("src"));
@@ -752,7 +787,7 @@
                         }
                         var url = layerConfig[nyName].jsondata;
                         $.ajax({
-                           
+
                             url: url,
                             dataType: 'json',
                             type: "GET",
@@ -809,11 +844,12 @@
                     currenturl = layerConfig["粮食生产功能区"]["功能区级别"].url;
                     visiableArray = layerConfig["粮食生产功能区"]["功能区级别"].array;
                     // console.log(currenturl);
+                    console.log(sssy);
                     if (ssqy != "" || sssy != "") {
                         $("#farmArea").show();
                         $("#cityArea").hide();
                     } else {
-                        alert("请选择区域！");
+                        alert("请选择市县！");
                     }
                     $(".content>img").click(function () {
                         $(".content").hide();
@@ -850,7 +886,12 @@
                     $(".sel-fun button").append("<span class=\"caret\"></span>")
                     $("#cityArea").show();
                     // $(".content").show();
-                    sssy = areaNmae;
+                    if (areaNmae != "浙江") {
+                        sssy = areaNmae;
+                    } else {
+                        sssy = "";
+                    }
+
                     ssqy = "";
                     getsubArea(proName);
 
@@ -931,10 +972,10 @@
                             break;
                     }
                 }
-                var sql="";
+                var sql = "";
 
                 for (var i = 0; i < areasql.length; i++) {
-                    
+
                     if (i == areasql.length - 1) {
                         sql += areasql[i];
                     } else {
@@ -1603,7 +1644,7 @@
                 </ul>
                 <ul class="xdny" value="" style="display: none">
                     <li>
-                        <ul> 
+                        <ul>
                             <li>
                                 <img src="images/province.png">
                                 <input type="checkbox" id="1">
