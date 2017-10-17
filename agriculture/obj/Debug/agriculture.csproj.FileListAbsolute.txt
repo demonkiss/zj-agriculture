@@ -1,0 +1,6 @@
+E:\系统\浙江省农业平台\zj-agriculture\agriculture\bin\agriculture.dll.config
+E:\系统\浙江省农业平台\zj-agriculture\agriculture\bin\agriculture.dll
+E:\系统\浙江省农业平台\zj-agriculture\agriculture\bin\agriculture.pdb
+E:\系统\浙江省农业平台\zj-agriculture\agriculture\obj\Debug\agriculture.dll
+E:\系统\浙江省农业平台\zj-agriculture\agriculture\obj\Debug\agriculture.pdb
+E:\系统\浙江省农业平台\zj-agriculture\agriculture\obj\Debug\agriculture.csprojResolveAssemblyReference.cache
