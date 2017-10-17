@@ -104,6 +104,7 @@
     <Content Include="css\layout.css" />
     <Content Include="extras\ClusterLayer_M.js" />
     <Content Include="extras\ClusterLayer.js" />
+    <Content Include="extras\ClusterLayer_old.js" />
     <Content Include="findDK.html" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="HtmlPage1.html" />
