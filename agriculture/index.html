@@ -109,7 +109,7 @@
         var sssy = "";
         var ssqy = "";
         var currenturl = "";
-        var visiableArray;
+        var visiableArray=[0];
         var areasql = [];
         //  var lslayer;
         require([
@@ -164,32 +164,32 @@
             };
             var initextent = new Extent(120.135361472, 30.2208220636, 120.185361472, 30.2708220636, new SpatialReference({ wkid: 4326 }));
             var fullExtent = new Extent(118.33968849655, 29.1885894750343, 120.75238251614, 30.6257261531396, new SpatialReference({ "wkid": 4326 }));
-         //   var zj = addZJBorder();
-          //  console.log(zj);
-          //  zjextent = new Extent(parseFloat(zj.xmin), parseFloat(zj.ymin), parseFloat(zj.xmax), parseFloat(zj.ymax), new SpatialReference({ "wkid": 4326 }));
-           // console.log(zjextent);
+            //   var zj = addZJBorder();
+            //  console.log(zj);
+            //  zjextent = new Extent(parseFloat(zj.xmin), parseFloat(zj.ymin), parseFloat(zj.xmax), parseFloat(zj.ymax), new SpatialReference({ "wkid": 4326 }));
+            // console.log(zjextent);
             map = new Map("map", {
                 // basemap: "topo",
                 logo: false,
                 slider: false,
                 extent: fullExtent,
                 // center: [119.789, 29.543],
-               //  zoom: 6
+                //  zoom: 6
             });
-         //   currenturl = "http://localhost:6080/arcgis/rest/services/ls_2000/MapServer";
-         //   var lsLayer2 = new ArcGISDynamicMapServiceLayer(currenturl, { id: "ls" });
+              currenturl = "http://localhost:6080/arcgis/rest/services/ls_2000/MapServer";
+            //   var lsLayer2 = new ArcGISDynamicMapServiceLayer(currenturl, { id: "ls" });
             var layer = new TDTLayer("img");//影像img 矢量 vec
             map.addLayer(layer, 0);
-           
-          //  addZJCityBorder();
-           // addZJBorder();
+
+            //  addZJCityBorder();
+            // addZJBorder();
             var annolayer = new TDTLayer_Anno("cia");//影像cia 矢量cva
             //  map.addLayer(annolayer, 1);
             // map.addLayer(lsLayer2);
             //  lsLayer.hide();
             map.on("layer-add", function () {
 
-                
+
             })
             $(function () {
                 $.ajax({
@@ -202,16 +202,16 @@
                         // pointData = data;
                         ClusterData = data.features;
                         //  addClusters(data);
-                        
+
                     }
 
                 });
-               
+
             })
             var updateListener = map.on("update-end", function (err) {
-                console.log($("#proSelect a").eq(0));
+               // console.log($("#proSelect a").eq(0));
                 //alert(1);
-                $("#proSelect a").eq(0).trigger("click");
+              
                 // do something
                 // alert(1);
                 //$.ajax({
@@ -264,7 +264,8 @@
                     }
                 };
                 bindEvt();
-               
+                $("#proSelect a").eq(0).trigger("click"); 
+
             })
             // $("#function").hide();
             // $("#cityArea").hide();
@@ -366,7 +367,7 @@
             //添加聚类图层
             function getClusterData(types, attr) {
                 if (ClusterData) {
-                    console.log(ClusterData);
+                   // console.log(ClusterData);
                     showClusterData.length = 0;
                     if (attr != "认定面积") {
                         for (var k = 0; k < types.length; k++) {
@@ -536,19 +537,19 @@
                                     var RGB_value = parseInt(166 + parseInt(data.features[i].properties.hospital) * ((166 - 255) / 255));
                                     var sfs = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 255, 0]), 0.5), new Color([255, 255, 0, 0.01]));
                                     var graphic = new Graphic(polygon, sfs, attr);
-                                     extent = pu.getExtent();
-                                  //  console.log(extent);
-                                    
+                                    extent = pu.getExtent();
+                                    //  console.log(extent);
+
                                     borderLayer.add(graphic);
                                     map.setExtent(extent, true);
                                     map.disableScrollWheelZoom();
                                     // map.addLayer(borderLayer);
-                                  //  return extent;
+                                    //  return extent;
                                 }
 
 
                             }
-                            
+
 
                         })
                     }
@@ -563,56 +564,80 @@
                     async: true,
                     data: {},
                     success: function (data) {
-                        require(["esri/layers/GraphicsLayer", "esri/geometry/Polygon", "esri/symbols/PictureMarkerSymbol", "esri/Color", "esri/graphic", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol","esri/symbols/TextSymbol",
-  "esri/symbols/Font"], function (GraphicsLayer, Polygon, PictureMarkerSymbol, Color, Graphic, SimpleLineSymbol, SimpleFillSymbol,TextSymbol,Font) {
-                            var cityLayer = new GraphicsLayer({ id: "cityLayer" });
+                        require(["esri/layers/GraphicsLayer", "esri/geometry/Polygon", "esri/symbols/PictureMarkerSymbol", "esri/Color", "esri/graphic", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol", "esri/symbols/TextSymbol",
+  "esri/symbols/Font"], function (GraphicsLayer, Polygon, PictureMarkerSymbol, Color, Graphic, SimpleLineSymbol, SimpleFillSymbol, TextSymbol, Font) {
+      var cityLayer = new GraphicsLayer({ id: "cityLayer" });
+      //var textLayer
+      for (var i = 0; i < data.features.length; i++) {
 
-                            for (var i = 0; i < data.features.length; i++) {
-                                
-                                    var polygonJson = {
-                                        "rings": data.features[i].geometry.coordinates,
-                                        "spatialReference": { "wkid": 4326 }
-                                    };
-                                    var polygon = new Polygon(polygonJson);
-                                    var pu = new Polygon(data.features[i].geometry.coordinates);
-                                // var attr = {};
-                                    var upperValue = 4000;
-                                    var lowerValue = 1000;
-                                    var number=Math.floor(Math.random() * (upperValue - lowerValue + 1) + lowerValue);
-                                    var attr = { "name": data.features[i].properties.name, "number": data.features[i].properties.confirm };
-                                    var RGB_value = 60+parseInt((number - lowerValue) * ((255-60) / (upperValue - lowerValue)));
-                                    console.log(RGB_value);
-                                    var sfs = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([RGB_value, 0, 0]), 0.5), new Color([RGB_value, 0, 0, 0.6]));
-                                    var graphic = new Graphic(polygon, sfs, attr);
-                                    var extent = pu.getExtent();
-                                    var point = extent.getCenter();
-                                    var showLabel = attr.name + " 农田地块数：" + number;
-                                    var font = new Font();
-                                    font.setSize("12pt");
-                                    font.setFamily("微软雅黑");
-                                // font.setWeight(Font.WEIGHT_BOLD);
-                                //  textSymbol.setFont(font);
-                                    cityLayer.add(graphic);
-                                    var label = new TextSymbol(showLabel)
-                                      .setColor(new Color([0, 0, 0]), 0.5)
-                                     
-                                    .setFont(font);
-                                    cityLayer.add(
-                                      new Graphic(
-                                        point,
-                                        label,
-                                       attr
-                                      )
-                                    );
-                                  
-                                   // map.setExtent(extent, true);
-                                    map.addLayer(cityLayer);
-                                
+          var polygonJson = {
+              "rings": data.features[i].geometry.coordinates,
+              "spatialReference": { "wkid": 4326 }
+          };
+          var polygon = new Polygon(polygonJson);
+          var pu = new Polygon(data.features[i].geometry.coordinates);
+          // var attr = {};
+          var upperValue = 4000;
+          var lowerValue = 1000;
+          var number = Math.floor(Math.random() * (upperValue - lowerValue + 1) + lowerValue);
+          var attr = { "name": data.features[i].properties.name, "number": data.features[i].properties.confirm };
+          var RGB_value = 60 + parseInt((number - lowerValue) * ((255 - 60) / (upperValue - lowerValue)));
+         // console.log(RGB_value);
+          var sfs = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([RGB_value, 0, 0]), 0.5), new Color([RGB_value, 0, 0, 0.6]));
+          var graphic = new Graphic(polygon, sfs, attr);
+          var extent = pu.getExtent();
+          var point = extent.getCenter();
+          var showLabel = attr.name + " 农田地块数：" + number;
+          var font = new Font();
+          font.setSize("12pt");
+          font.setFamily("微软雅黑");
+          // font.setWeight(Font.WEIGHT_BOLD);
+          //  textSymbol.setFont(font);
+          cityLayer.add(graphic);
+          var label = new TextSymbol(showLabel)
+            .setColor(new Color([0, 0, 0]), 0.5)
 
-                            }
+          .setFont(font);
+          cityLayer.add(
+            new Graphic(
+              point,
+              label
+            // attr
+            )
+          );
+
+          // map.setExtent(extent, true);
+          map.addLayer(cityLayer);
 
 
-                        })
+      }
+      var cityClick = cityLayer.on("click", function (e) {
+          //get the associated node info when the graphic is clicked
+          if (e.graphic.attributes["name"]) {
+              sssy = e.graphic.attributes["name"];
+              map.centerAndZoom([120.19, 30.26], 7);
+              //  console.log(sssy);
+              console.log($(".checks label").eq(0));
+              console.log($(".checks label").eq(1));
+              console.log($(".checks label").eq(2));
+              alert(sssy);
+              $("#farmArea").show();
+              $("#cityArea").hide();
+              $(".sel-fun button").text(sssy);
+              $(".sel-fun button").append("<span class=\"caret\"></span>")
+              map.removeLayer(cityLayer);
+              $(".checks label").eq(1).trigger("click");
+            
+            
+             // $(".checks label").eq(0).trigger("click");
+            //  $(".checks label").eq(1).trigger("click");
+              //  $(".checks label").eq(2).trigger("click");
+             
+          }
+         
+      })
+
+  })
                     }
                 })
             }
@@ -687,7 +712,7 @@
                 $(".checks").find("label").each(function () {
                     $(this).on("click", function () {
                         var attrName = $(this).parent().parent().parent().parent().attr("value");
-                        // console.log(attrName);
+                         console.log(attrName);
                         if ($(this).attr("data-state") == "uncheck") {
                             $(this).attr("data-state", "check");
                             $(this).addClass("active");
@@ -726,7 +751,7 @@
                                     }
                                 } else {
                                     var asql = getAreaSql(clusterType);
-                                    console.log(asql);
+                                   // console.log(asql);
                                     sql = "地市名称='" + sssy + "' and " + asql;
                                     if (ssqy != "") {
                                         sql = "县市区名称='" + ssqy + "'and " + asql;
@@ -735,7 +760,7 @@
                                 addDynamicLayer(sql);
                             }
                             var scale = map.getScale();
-                            console.log(scale);
+                          //  console.log(scale);
 
 
 
@@ -778,13 +803,13 @@
                                     }
                                 } else {
                                     var asql = getAreaSql(clusterType);
-                                    console.log(asql);
+                                   // console.log(asql);
                                     sql = "地市名称='" + sssy + "' and " + asql;
                                     if (ssqy != "") {
                                         sql = "县市区名称='" + ssqy + "'and " + asql;
                                     }
                                 }
-                                console.log(sql);
+                              //  console.log(sql);
                                 addDynamicLayer(sql);
                             } else {
                                 if (map.getLayer("ls")) {
@@ -863,11 +888,11 @@
                                 })
                             }
                         })
-                        console.log(nyName + "," + secondName);
+                      //  console.log(nyName + "," + secondName);
                         if (nyName && secondName) {
                             currenturl = layerConfig[nyName][secondName].url;
                             visiableArray = layerConfig[nyName][secondName].array;
-                            console.log(currenturl);
+                           // console.log(currenturl);
                         }
                         var url = layerConfig[nyName].jsondata;
                         $.ajax({
@@ -906,7 +931,7 @@
                                 }
                             } else {
                                 var asql = getAreaSql(clusterType);
-                                console.log(asql);
+                              //  console.log(asql);
                                 sql = "地市名称='" + sssy + "' and " + asql;
                                 if (ssqy != "") {
                                     sql = "县市区名称='" + ssqy + "'and " + asql;
@@ -961,7 +986,7 @@
                     })
                 })
                 $("#proSelect a").click(function () {
-                  
+
                     var proName = $(this).attr("value");
                     var areaNmae = $(this).text();
                     // alert(proName + ";" + areaNmae);
@@ -987,6 +1012,7 @@
 
 
                     })
+                    map.disableScrollWheelZoom();
                 })
 
                 $("#proSelect").on("change", function () {
