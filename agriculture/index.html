@@ -176,8 +176,8 @@
                 // center: [119.789, 29.543],
                 //  zoom: 6
             });
-              currenturl = "http://localhost:6080/arcgis/rest/services/ls_2000/MapServer";
-            //   var lsLayer2 = new ArcGISDynamicMapServiceLayer(currenturl, { id: "ls" });
+              currenturl = "http://localhost:6080/arcgis/rest/services/lsService/MapServer";
+               var lsLayer2 = new ArcGISDynamicMapServiceLayer(currenturl, { id: "ls2000" });
             var layer = new TDTLayer("img");//影像img 矢量 vec
             map.addLayer(layer, 0);
 
@@ -185,12 +185,12 @@
             // addZJBorder();
             var annolayer = new TDTLayer_Anno("cia");//影像cia 矢量cva
             //  map.addLayer(annolayer, 1);
-            // map.addLayer(lsLayer2);
+           //  map.addLayer(lsLayer2);
             //  lsLayer.hide();
-            map.on("layer-add", function () {
+            //map.on("layer-add", function () {
 
 
-            })
+            //})
             $(function () {
                 $.ajax({
                     url: "Json/粮食生产功能区.json",
@@ -208,41 +208,41 @@
                 });
 
             })
-            var updateListener = map.on("update-end", function (err) {
-               // console.log($("#proSelect a").eq(0));
-                //alert(1);
+            //var updateListener = map.on("update-end", function (err) {
+            //   // console.log($("#proSelect a").eq(0));
+            //    //alert(1);
               
-                // do something
-                // alert(1);
-                //$.ajax({
-                //    url: "Json/ls.json",
-                //    dataType: 'json',
-                //    type: "GET",
-                //    async: false,
-                //    data: {},
-                //    success: function (data) {
-                //        // pointData = data;
-                //        ClusterData = data.features;
-                //      //  addClusters(data);
+            //    // do something
+            //    // alert(1);
+            //    //$.ajax({
+            //    //    url: "Json/ls.json",
+            //    //    dataType: 'json',
+            //    //    type: "GET",
+            //    //    async: false,
+            //    //    data: {},
+            //    //    success: function (data) {
+            //    //        // pointData = data;
+            //    //        ClusterData = data.features;
+            //    //      //  addClusters(data);
 
-                //    }
+            //    //    }
 
-                //});
-                //$.ajax({
-                //    url: "Json/multiType.json",
-                //    dataType: 'json',
-                //    type: "GET",
-                //    async: true,
-                //    data: {},
-                //    success: function (data) {
-                //        pointData = data;
-                //        addMultiClusters(data);
+            //    //});
+            //    //$.ajax({
+            //    //    url: "Json/multiType.json",
+            //    //    dataType: 'json',
+            //    //    type: "GET",
+            //    //    async: true,
+            //    //    data: {},
+            //    //    success: function (data) {
+            //    //        pointData = data;
+            //    //        addMultiClusters(data);
 
-                //    }
+            //    //    }
 
-                //});
-                updateListener.remove();
-            });
+            //    //});
+            //    updateListener.remove();
+            //});
             var basemap = "http://www.hangzhoumap.gov.cn/a67db68dbfb2752f9b913dff9ece867117c87e95/Tile/ArcGISFlex/HZTDTVECTORBLEND.gis";
             //   var basemap = "http://www.hangzhoumap.gov.cn/Tile/ArcGISFlex/HZTDTVECTORBLEND.gis";
             // var basemap = "http://21.15.121.121/a67db68dbfb2752f9b913dff9ece867117c87e95/Tile/ArcGISREST/HZSYVECTOR201512wkid.gis";
@@ -280,57 +280,11 @@
             // $("#cityArea").hide();
             //getsubArea("浙江");
             map.on("zoom-end", function () {
-                var currentScale = map.getScale();
-                // console.log('Scale: ' + currentScale);
-                if (currentScale > 60000) {
-                    //  lsLayer.hide();
-                    if (map.getLayer("ls")) {
-                        map.getLayer("ls").hide();
-                        // lsLayer.hide();
-                        // map.removeLayer(map.getLayer("ls"));
-                    }
-                    if (map.getLayer("clusters")) {
-                        map.getLayer("clusters").show();
-                    }
-                } else {
-                    if (map.getLayer("clusters")) {
-                        map.getLayer("clusters").hide();
-                    }
-                    if (map.getLayer("ls")) {
-                        map.getLayer("ls").show();
-                    }
-
-                    //if (sssy != "") {
-                    //    var sql = "\"地市名称\"='"+ sssy + "'";
-                    //    if (ssqy != "") {
-                    //        sql = "\"县市区名称\"='" + ssqy + "'";
-                    //    }
-                    //    addDynamicLayer(sql);
-                    //}
-
-                    //   lsLayer.show();
-                    // map.addLayer(lsLayer);
-                }
+                switchLayer();
 
 
             })
 
-            //map.on("load", function () {
-            //  //  alert(2);
-            //    $.ajax({
-            //        url: "Json/20000json.json",
-            //        dataType: 'json',
-            //        type: "GET",
-            //        async: true,
-            //        data: {},
-            //        success: function (data) {
-            //            pointData = data;
-            //            addClusters(data);
-
-            //        }
-
-            //    });
-            //})
             //添加动态图层
             function addDynamicLayer(layersql) {
                 var imageParameters = new ImageParameters();
@@ -341,11 +295,6 @@
 
                 var layerDefs = [];
                 layerDefs[visiableArray[0]] = layersql;
-
-                //  console.log(layersql);
-                //  console.log("\"地市名称\"='杭州市'");
-                // layerDefs[0] = "\"地市名称\"='杭州市'";
-                // layerDefs[0] = "OBJECTID='8'";
 
                 imageParameters.layerDefinitions = layerDefs;
                 //imageParameters.layerDefinitions = [layersql];
@@ -359,19 +308,10 @@
                 }
                 //   currenturl= "http://localhost:6080/arcgis/rest/services/ls_2000/MapServer";
                 var lslayer = new ArcGISDynamicMapServiceLayer(currenturl, { "imageParameters": imageParameters, "id": "ls", "opacity": 0.6 });
-                map.addLayer(lslayer, 3);
+                map.addLayer(lslayer, 2);
+                // alert(0);
+              // alert(visiableArray);
                 lslayer.setVisibleLayers(visiableArray);
-                var scale = map.getScale();
-                // console.log(scale);
-                if (scale > 60000) {
-
-                    map.getLayer("ls").hide();
-                }
-                else {
-                    map.getLayer("ls").show();
-                }
-
-
             }
             //添加聚类图层
             function getClusterData(types, attr) {
@@ -531,7 +471,7 @@
                     data: {},
                     success: function (data) {
                         require(["esri/layers/GraphicsLayer", "esri/geometry/Polygon", "esri/symbols/PictureMarkerSymbol", "esri/Color", "esri/graphic", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol"], function (GraphicsLayer, Polygon, PictureMarkerSymbol, Color, Graphic, SimpleLineSymbol, SimpleFillSymbol) {
-                            var borderLayer = new GraphicsLayer({ id: "borderLayer" });
+                          //  var borderLayer = new GraphicsLayer({ id: "borderLayer" });
 
                             for (var i = 0; i < data.features.length; i++) {
                                 if (data.features[i].properties.name == "浙江") {
@@ -549,8 +489,8 @@
                                     extent = pu.getExtent();
                                     //  console.log(extent);
 
-                                    borderLayer.add(graphic);
-                                    map.setExtent(extent, true);
+                                 //   borderLayer.add(graphic);
+                                  //  map.setExtent(extent, true);
                                     map.disableScrollWheelZoom();
                                     // map.addLayer(borderLayer);
                                     //  return extent;
@@ -576,6 +516,7 @@
                         require(["esri/layers/GraphicsLayer", "esri/geometry/Polygon", "esri/symbols/PictureMarkerSymbol", "esri/Color", "esri/graphic", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol", "esri/symbols/TextSymbol",
   "esri/symbols/Font"], function (GraphicsLayer, Polygon, PictureMarkerSymbol, Color, Graphic, SimpleLineSymbol, SimpleFillSymbol, TextSymbol, Font) {
       var cityLayer = new GraphicsLayer({ id: "cityLayer" });
+      var cityTextLayer = new GraphicsLayer({ id: "cityTextLayer" });
       //var textLayer
       for (var i = 0; i < data.features.length; i++) {
 
@@ -596,7 +537,7 @@
           var graphic = new Graphic(polygon, sfs, attr);
           var extent = pu.getExtent();
           var point = extent.getCenter();
-          var showLabel = attr.name + " 农田地块数：" + number;
+          var showLabel = attr.name + "：" + number;
           var font = new Font();
           font.setSize("12pt");
           font.setFamily("微软雅黑");
@@ -607,7 +548,7 @@
             .setColor(new Color([0, 0, 0]), 0.5)
 
           .setFont(font);
-          cityLayer.add(
+          cityTextLayer.add(
             new Graphic(
               point,
               label
@@ -617,7 +558,8 @@
 
           // map.setExtent(extent, true);
           map.addLayer(cityLayer);
-
+          map.addLayer(cityTextLayer);
+          map.disableScrollWheelZoom();
 
       }
       var cityClick = cityLayer.on("click", function (e) {
@@ -626,22 +568,22 @@
               sssy = e.graphic.attributes["name"];
               map.centerAndZoom([120.19, 30.26], 7);
               //  console.log(sssy);
-              console.log($(".checks label").eq(0));
-              console.log($(".checks label").eq(1));
-              console.log($(".checks label").eq(2));
+             // console.log($(".checks label").eq(0));
+            //  console.log($(".checks label").eq(1));
+            //  console.log($(".checks label").eq(2));
              // alert(sssy);
               $("#farmArea").show();
               $("#cityArea").hide();
               $(".sel-fun button").text(sssy);
               $(".sel-fun button").append("<span class=\"caret\"></span>")
               map.removeLayer(cityLayer);
+              map.removeLayer(map.getLayer("cityTextLayer"));
               map.enableScrollWheelZoom();
+              //alert(0);
               $(".checks label").eq(0).trigger("click");
-            
-            
              // $(".checks label").eq(0).trigger("click");
               $(".checks label").eq(1).trigger("click");
-                $(".checks label").eq(2).trigger("click");
+              $(".checks label").eq(2).trigger("click");
              
           }
          
@@ -651,7 +593,7 @@
                     }
                 })
             }
-
+            //绑定事件
             function bindEvt() {
                 //空间分析工具事件
                 var toorbarState = false;
@@ -726,113 +668,45 @@
                         if ($(this).attr("data-state") == "uncheck") {
                             $(this).attr("data-state", "check");
                             $(this).addClass("active");
-
-                            // $('#left').children(':visible');
-
+                            //add data to array
                             clusterType.push($(this).next().text());
-                           // alert($(this).next().text());
-                            console.log(clusterType);
                             layerDType.push("'" + $(this).next().text() + "'");
                             clusterImg.push($(this).prev().prev().attr("src"));
-                            var scale = map.getScale();
-                            if (map.getLayer("clusters")) {
-                                map.removeLayer(map.getLayer("clusters"));
-                            }
 
+                            //添加聚类图层               
                             getClusterData(clusterType, attrName);
-                            if (scale < 60000) {
-                                if (map.getLayer("clusters")) {
-                                    map.getLayer("clusters").hide();
-                                }
-                            }
-
-
-
-
-                            if (sssy != "" && clusterType.length != 0) {
-                                //var sql = "地市名称='" + sssy + "' and " + attrName + " in (" + layerDType.toString() + ")";
-                                //if (ssqy != "") {
-                                //    sql = "县市区名称='" + ssqy + "'and " + attrName + " in (" + layerDType.toString() + ")";
-                                //}
-                                // console.log(sql);
-                                var sql = "";
-                                if (attrName != "认定面积") {
-                                    sql = "地市名称='" + sssy + "' and " + attrName + " in (" + layerDType.toString() + ")";
-                                    if (ssqy != "") {
-                                        sql = "县市区名称='" + ssqy + "'and " + attrName + " in (" + layerDType.toString() + ")";
-                                    }
-                                } else {
-                                    var asql = getAreaSql(clusterType);
-                                   // console.log(asql);
-                                    sql = "地市名称='" + sssy + "' and " + asql;
-                                    if (ssqy != "") {
-                                        sql = "县市区名称='" + ssqy + "'and " + asql;
-                                    }
-                                }
-                                //暂时注释
-                               //  addDynamicLayer(sql);
-                            }
-                            var scale = map.getScale();
-                          //  console.log(scale);
-
-
-
-
-
-                            // addDynamicLayer(sql);
-
+                            var ld = getLayerDefine(layerDType, attrName);
+                            //暂时注释 点击checks添加动态图层
+                            addDynamicLayer(ld);
+  
                         } else {
                             $(this).attr("data-state", "uncheck");
                             $(this).removeClass("active");
                             clusterImg.remove($(this).prev().prev().attr("src"));
                             clusterType.remove($(this).next().text());
                             layerDType.remove("'" + $(this).next().text() + "'");
-                            var scale = map.getScale();
-                            if (map.getLayer("clusters")) {
-                                map.removeLayer(map.getLayer("clusters"));
-                            }
 
-                            getClusterData(clusterType, attrName);
-                            if (scale < 60000) {
+                            if (clusterType) {
+                                getClusterData(clusterType, attrName);
+                            } else {
                                 if (map.getLayer("clusters")) {
-                                    map.getLayer("clusters").hide();
+                                    map.removeLayer(map.getLayer("clusters"));
                                 }
                             }
-
-
-                            // console.log(clusterType);
-
-
+                            
                             if (sssy != "" && layerDType.length != 0) {
-                                //var sql = "地市名称='" + sssy + "' and " + attrName + " in (" + layerDType.toString() + ")";
-                                //if (ssqy != "") {
-                                //    sql = "县市区名称='" + ssqy + "'and " + attrName + " in (" + layerDType.toString() + ")";
-                                //}
-                                var sql = "";
-                                if (attrName != "认定面积") {
-                                    sql = "地市名称='" + sssy + "' and " + attrName + " in (" + layerDType.toString() + ")";
-                                    if (ssqy != "") {
-                                        sql = "县市区名称='" + ssqy + "'and " + attrName + " in (" + layerDType.toString() + ")";
-                                    }
-                                } else {
-                                    var asql = getAreaSql(clusterType);
-                                   // console.log(asql);
-                                    sql = "地市名称='" + sssy + "' and " + asql;
-                                    if (ssqy != "") {
-                                        sql = "县市区名称='" + ssqy + "'and " + asql;
-                                    }
-                                }
-                              //  console.log(sql);
-                                addDynamicLayer(sql);
+                                var ld = getLayerDefine(layerDType, attrName);
+                                //暂时注释 点击checks添加动态图层
+                                addDynamicLayer(ld);
                             } else {
                                 if (map.getLayer("ls")) {
                                     map.removeLayer(map.getLayer("ls"));
                                 }
                             }
-
-
+                            
                         }
-                        $(this).prev().trigger("click");
+                        switchLayer();
+                       $(this).prev().trigger("click");
                     })
                 });
                 //切换选择部分的js
@@ -905,7 +779,7 @@
                         if (nyName && secondName) {
                             currenturl = layerConfig[nyName][secondName].url;
                             visiableArray = layerConfig[nyName][secondName].array;
-                           // console.log(currenturl);
+                            console.log(currenturl);
                         }
                         var url = layerConfig[nyName].jsondata;
                         $.ajax({
@@ -923,11 +797,6 @@
                             }
 
                         });
-                        // alert(currenturl);
-                        // console.log(clusterType);
-                        if (map.getLayer("clusters")) {
-                            map.removeLayer(map.getLayer("clusters"));
-                        }
                         getClusterData(clusterType, attr_Name);
                         var scale = map.getScale();
                         if (scale < 60000) {
@@ -951,7 +820,8 @@
                                 }
                             }
 
-                            // console.log(sql);
+                            // console.log(sql);点击second添加动态图层
+                           // alert(11);
                             addDynamicLayer(sql);
                         } else {
                             if (map.getLayer("ls")) {
@@ -1007,7 +877,7 @@
                         map.removeLayer(map.getLayer("clusters"));
                     }
                     if (map.getLayer("ls")) {
-                        map.getLayer("ls").hide();
+                        map.removeLayer(map.getLayer("ls"));
                     }
 
                     $(".checks").find("label").each(function () {
@@ -1047,10 +917,11 @@
                     }
                     if (areaNmae != "浙江") {
                         sssy = areaNmae;
+                        map.enableScrollWheelZoom();
                        
                     } else {
                         sssy = "";
-                        
+                        map.disableScrollWheelZoom();
                         addZJBorder();
                         addZJCityBorder();
                     }
@@ -1064,7 +935,7 @@
 
 
                     })
-                    map.disableScrollWheelZoom();
+                    
                 })
 
                 $("#proSelect").on("change", function () {
@@ -1084,13 +955,7 @@
 
                     })
                 })
-                //checkbox
-                //$('.checks input:checkbox').click(function () {
-                //    this.blur();
-                //    this.focus();
-                //    $(this).text();
-                //    console.log($(this).parent().children("input"));
-                //});
+          
 
                 //切换底图
                 var MapMenu = dojo.query(".MapMenu a");
@@ -1116,6 +981,46 @@
                 $("#cityArea .control").on("click", ".sj", "", clickSArea);
                 //县级事件
                 $("#cityArea .control").on("click", ".xj", "", clickArea);
+            }
+            function addDLayerByCity() {
+
+            }
+            //切换显示图层
+            function switchLayer() {
+                let Scale = map.getScale();
+                if (Scale > 60000) {
+                    //  lsLayer.hide();
+                    if (map.getLayer("ls")) {
+                        map.getLayer("ls").hide();
+                    }
+                    if (map.getLayer("clusters")) {
+                        map.getLayer("clusters").show();
+                    }
+                } else {
+                    if (map.getLayer("clusters")) {
+                        map.getLayer("clusters").hide();
+                    }
+                    if (map.getLayer("ls")) {
+                        map.getLayer("ls").show();
+                    }
+                }
+            }
+            function getLayerDefine(layerDType, attrName) {
+                let sql = "";
+                if (attrName != "认定面积") {
+                    sql = "地市名称='" + sssy + "' and " + attrName + " in (" + layerDType.toString() + ")";
+                    if (ssqy != "") {
+                        sql = "县市区名称='" + ssqy + "' and " + attrName + " in (" + layerDType.toString() + ")";
+                    }
+                } else {
+                    var asql = getAreaSql(clusterType);
+                    // console.log(asql);
+                    sql = "地市名称='" + sssy + "' and " + asql;
+                    if (ssqy != "") {
+                        sql = "县市区名称='" + ssqy + "' and " + asql;
+                    }
+                }
+                return sql;
             }
             function getAreaSql(types) {
                 areasql.length = 0;
@@ -1153,6 +1058,7 @@
                 map.enableScrollWheelZoom();
                 if (map.getLayer("cityLayer")) {
                     map.removeLayer(map.getLayer("cityLayer"));
+                    map.removeLayer(map.getLayer("cityTextLayer"));
                 }
                 // ssqy = "";
                 var areaId = i;
@@ -1318,6 +1224,9 @@
                 //  console.log(fileid);
             }
             function addMultiClusters(multiData) {
+                if (map.getLayer("clusters")) {
+                    map.removeLayer(map.getLayer("clusters"));
+                }
                 var point_array = [];
                 var wgs = new esri.SpatialReference({
                     "wkid": 4326
@@ -1364,12 +1273,15 @@
 
                 // popupTemplate to work with attributes specific to this dataset
                 var popupTemplate = new PopupTemplate({
-                    "title": "",
+                    "title": "属性信息",
+                    "content": "聚集点信息",
                     "fieldInfos": [{
                         "fieldName": "认定编号",
+                        "label": "认定编号",
                         visible: true
                     }, {
                         "fieldName": "认定名称",
+                        "label": "认定名称",
                         visible: true
                     }, {
                         "fieldName": "规划名称",
@@ -1437,13 +1349,13 @@
                 map.addLayer(clusterLayer);
 
                 // close the info window when the map is clicked
-                map.on("click", cleanUp);
+              //  map.on("click", cleanUp);
                 // close the info window when esc is pressed
-                map.on("key-down", function (e) {
-                    if (e.keyCode === 27) {
-                        cleanUp();
-                    }
-                });
+              //  map.on("key-down", function (e) {
+               //     if (e.keyCode === 27) {
+               //         cleanUp();
+               //     }
+             //   });
             }
             function addClusters(resp) {
                 var photoInfo = {};
@@ -1558,32 +1470,7 @@
                     }
                 })
             }
-            function cleanUp() {
-                map.infoWindow.hide();
-                clusterLayer.clearSingles();
-            }
-
-            function error(err) {
-                // console.log("something failed: ", err);
-            }
-
-            // show cluster extents...
-            // never called directly but useful from the console
-            //window.showExtents = function () {
-            //    var extents = map.getLayer("clusterExtents");
-            //    if (extents) {
-            //        map.removeLayer(extents);
-            //    }
-            //    extents = new GraphicsLayer({ id: "clusterExtents" });
-            //    var sym = new SimpleFillSymbol().setColor(new Color([205, 193, 197, 0.5]));
-
-            //    arrayUtils.forEach(clusterLayer._clusters, function (c, idx) {
-            //        var e = c.attributes.extent;
-            //        extents.add(new Graphic(new Extent(e[0], e[1], e[2], e[3], map.spatialReference), sym));
-            //    }, this);
-            //    map.addLayer(extents, 0);
-            //};
-            // });
+         
         });
     </script>
 </head>
