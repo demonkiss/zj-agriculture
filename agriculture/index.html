@@ -172,7 +172,7 @@
                 // basemap: "topo",
                 logo: false,
                 slider: false,
-                extent: fullExtent,
+             //   extent: fullExtent,
                 // center: [119.789, 29.543],
                 //  zoom: 6
             });
@@ -264,7 +264,16 @@
                     }
                 };
                 bindEvt();
-                $("#proSelect a").eq(0).trigger("click"); 
+              //  map.resize();
+              //  map.reposition();
+               // setTimeout($("#proSelect a").eq(0).trigger("click"), 3000);//延时3秒 
+                $("#proSelect a").eq(0).trigger("click");
+                //  $("#proSelect a").eq(0).trigger("click");
+               // map.setExtent(fullExtent);
+                map.centerAndZoom([120.19, 30.26], 6);
+              //  map.resize();
+               // map.reposition();
+                $(".content").hide();
 
             })
             // $("#function").hide();
@@ -620,18 +629,19 @@
               console.log($(".checks label").eq(0));
               console.log($(".checks label").eq(1));
               console.log($(".checks label").eq(2));
-              alert(sssy);
+             // alert(sssy);
               $("#farmArea").show();
               $("#cityArea").hide();
               $(".sel-fun button").text(sssy);
               $(".sel-fun button").append("<span class=\"caret\"></span>")
               map.removeLayer(cityLayer);
-              $(".checks label").eq(1).trigger("click");
+              map.enableScrollWheelZoom();
+              $(".checks label").eq(0).trigger("click");
             
             
              // $(".checks label").eq(0).trigger("click");
-            //  $(".checks label").eq(1).trigger("click");
-              //  $(".checks label").eq(2).trigger("click");
+              $(".checks label").eq(1).trigger("click");
+                $(".checks label").eq(2).trigger("click");
              
           }
          
@@ -720,6 +730,8 @@
                             // $('#left').children(':visible');
 
                             clusterType.push($(this).next().text());
+                           // alert($(this).next().text());
+                            console.log(clusterType);
                             layerDType.push("'" + $(this).next().text() + "'");
                             clusterImg.push($(this).prev().prev().attr("src"));
                             var scale = map.getScale();
@@ -757,7 +769,8 @@
                                         sql = "县市区名称='" + ssqy + "'and " + asql;
                                     }
                                 }
-                                addDynamicLayer(sql);
+                                //暂时注释
+                               //  addDynamicLayer(sql);
                             }
                             var scale = map.getScale();
                           //  console.log(scale);
@@ -960,30 +973,61 @@
                     } else {
                         alert("请选择市县！");
                     }
-                    $(".content>img").click(function () {
-                        $(".content").hide();
-                        if (map.getLayer("clusters")) {
-                            map.removeLayer(map.getLayer("clusters"));
-                        }
+                    //$(".content>img").click(function () {
+                    //    $(".content").hide();
+                    //    if (map.getLayer("clusters")) {
+                    //        map.removeLayer(map.getLayer("clusters"));
+                    //    }
+                    //    if (map.getLayer("ls")) {
+                    //        map.getLayer("ls").hide();
+                    //    }
 
-                        $(".checks").find("label").each(function () {
-                            $(this).attr("data-state", "uncheck");
-                            $(this).removeClass("active");
+                    //    $(".checks").find("label").each(function () {
+                    //        $(this).attr("data-state", "uncheck");
+                    //        $(this).removeClass("active");
 
-                        })
-                        clusterImg.length = 0;
-                        clusterType.length = 0;
-                        layerDType.length = 0;
-                        $(".sel-fun button").text("浙江");
-                        $(".sel-fun button").append("<span class=\"caret\"></span>")
-                        ssqy = "";
-                        sssy = "";
-                        map.infoWindow.hide();
-                        // $("#function").disable();
+                    //    })
+                    //    clusterImg.length = 0;
+                    //    clusterType.length = 0;
+                    //    layerDType.length = 0;
+                    //    $(".sel-fun button").text("浙江");
+                    //    $(".sel-fun button").append("<span class=\"caret\"></span>")
+                    //    ssqy = "";
+                    //    sssy = "";
+                    //    map.infoWindow.hide();
+                    //    // $("#function").disable();
 
-                        // getsubArea("浙江");
-                        // $("#cityArea").show();
+                    //    // getsubArea("浙江");
+                    //    // $("#cityArea").show();
+                    //})
+                })
+                $("#farmArea img").click(function () {
+                    $(".content").hide();
+                    if (map.getLayer("clusters")) {
+                        map.removeLayer(map.getLayer("clusters"));
+                    }
+                    if (map.getLayer("ls")) {
+                        map.getLayer("ls").hide();
+                    }
+
+                    $(".checks").find("label").each(function () {
+                        $(this).attr("data-state", "uncheck");
+                        $(this).removeClass("active");
+
                     })
+                    clusterImg.length = 0;
+                    clusterType.length = 0;
+                    layerDType.length = 0;
+                    $(".sel-fun button").text("浙江");
+                    $(".sel-fun button").append("<span class=\"caret\"></span>")
+                    ssqy = "";
+                    sssy = "";
+                    map.infoWindow.hide();
+                    $("#proSelect a").eq(0).trigger("click");
+                    // $("#function").disable();
+
+                    // getsubArea("浙江");
+                    // $("#cityArea").show();
                 })
                 $("#proSelect a").click(function () {
 
@@ -995,10 +1039,18 @@
                     $(".sel-fun button").append("<span class=\"caret\"></span>")
                     $("#cityArea").show();
                     // $(".content").show();
+                    if (map.getLayer("clusters")) {
+                        map.removeLayer(map.getLayer("clusters"));
+                    }
+                    if (map.getLayer("ls")) {
+                        map.removeLayer(map.getLayer("ls"));
+                    }
                     if (areaNmae != "浙江") {
                         sssy = areaNmae;
+                       
                     } else {
                         sssy = "";
+                        
                         addZJBorder();
                         addZJCityBorder();
                     }
