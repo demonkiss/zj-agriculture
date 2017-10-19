@@ -24,7 +24,7 @@ h1,h2,h3,h4,h5,h6 {
     font-weight:normal;
 }
 q:before,q:after {
-    content:'';
+    infocontent:'';
 }
 abbr,acronym {
     border:0;
@@ -124,84 +124,84 @@ html,body{
     float: right;
     margin-top: 4px;
 }*/
-.left .content{
+.left .infocontent{
     margin-top: 50px;
     border-radius: 4px;
 }
-.left .content>div:nth-child(2){
+.left .infocontent>div:nth-child(2){
     background-color: #3d93fd;
 }
-.left .content>img{
+.left .infocontent>img{
     margin: 8px 8px 0 0;
     cursor: pointer;
 }
-.left .content ul.btns{
+.left .infocontent ul.btns{
     color: rgba( 255, 255, 255, 0.569 );
     overflow: hidden;
 }
-.left .content ul.btns li{
+.left .infocontent ul.btns li{
     float: left;
     margin-top: 38px;
     padding-bottom: 10px;
     border-bottom: 2px solid #3d93fd;
 }
-.left .content ul.btns li.active{
+.left .infocontent ul.btns li.active{
     border-bottom: 2px solid white;
     color: white;
 }
-.left .content ul.btns li.ls{
+.left .infocontent ul.btns li.ls{
     margin-left: 37px;
 }
-.left .content ul.btns li.yq{
+.left .infocontent ul.btns li.yq{
     margin-left: 78px;
 }
-.left .content ul.btns li.nt{
+.left .infocontent ul.btns li.nt{
     margin-left: 88px;
 }
-.left .content ul.second{
+.left .infocontent ul.second{
     font-size: 14px;
     color: white;
     overflow: hidden;
     padding-bottom: 25px;
     margin: 20px  36px 0 37px;
 }
-.left .content ul.second li{
+.left .infocontent ul.second li{
     float: left;
     padding: 5px 0;
     text-align: center;
     border: 1px solid white;
     border-radius: 4px;
 }
-.left .content ul.second li.active{
+.left .infocontent ul.second li.active{
     color: #3d93fd;
     background-color: white;
 }
-.left .content ul.ls-content li{
+.left .infocontent ul.ls-infocontent li{
     margin-left: 19px;
     width: 93px;
 }
-.left .content ul.ls-content li:nth-child(1){
+.left .infocontent ul.ls-infocontent li:nth-child(1){
     margin-left: 0;
 }
-.left .content ul.yq-content li{
+.left .infocontent ul.yq-infocontent li{
     width: 118px;
     margin-left: 0;
 }
-.left .content ul.yq-content li:nth-child(2){
+.left .infocontent ul.yq-infocontent li:nth-child(2){
     margin-left: 39px;
 }
-.left .content ul.yq-content li:nth-child(3){
+.left .infocontent ul.yq-infocontent li:nth-child(3){
     margin-left: 38px;
 }
-.left .content ul.nt-content li{
+.left .infocontent ul.nt-infocontent li{
     margin-left: 5px;
     padding-left: 11px;
     padding-right: 11px;
 }
-.left .content ul.nt-content li:nth-child(1){
+.left .infocontent ul.nt-infocontent li:nth-child(1){
     margin-left: 0;
 }
-.left .content ul.nt-content li:nth-child(3),.left .content ul.nt-content li:nth-child(4){
+.left .infocontent ul.nt-infocontent li:nth-child(3),.left .infocontent ul.nt-infocontent li:nth-child(4){
     padding-left: 15px;
     padding-right: 16px;
 }

@@ -60,7 +60,7 @@
             // symbol for single graphics
             var SMS = SimpleMarkerSymbol;
             this._singleSym = options.singleSymbol || new SMS("circle", 6, null, new Color("#888"));
-            this._singleTemplate = options.singleTemplate || new PopupTemplate({ "title": "", "description": "{*}" });
+            this._singleTemplate = options.singleTemplate || new PopupTemplate({ "title": "aaaa", "description": "{*}" });
             this._maxSingles = options.maxSingles || 1000;
 
             this._webmap = options.hasOwnProperty("webmap") ? options.webmap : false;

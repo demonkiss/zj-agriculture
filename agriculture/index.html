@@ -27,9 +27,9 @@
         }
 
         /* center the image in the popup */
-        .esriViewPopup .gallery {
+        /*.esriViewPopup .gallery {
             margin: 0 auto !important;
-        }
+        }*/
 
         .gradient {
             background: #00f;
@@ -132,6 +132,7 @@
 
           "esri/layers/GraphicsLayer",
           "esri/SpatialReference",
+          "esri/InfoTemplate",
           "esri/dijit/PopupTemplate",
           "esri/geometry/Point",
           "esri/geometry/webMercatorUtils",
@@ -149,7 +150,7 @@
           parser, ready, arrayUtils, Color, domStyle, query, ImageParameters,
           Map, esriRequest, Graphic, Extent,
           SimpleMarkerSymbol, SimpleFillSymbol, PictureMarkerSymbol, ClassBreaksRenderer,
-          GraphicsLayer, SpatialReference, PopupTemplate, Point, webMercatorUtils, ArcGISDynamicMapServiceLayer, TDTLayer, TDTLayer_Anno,
+          GraphicsLayer, SpatialReference, InfoTemplate,PopupTemplate, Point, webMercatorUtils, ArcGISDynamicMapServiceLayer, TDTLayer, TDTLayer_Anno,
           ClusterLayer, ClusterLayer_M, on, domClass, domStyle
         ) {
             //ready(function () {
@@ -273,7 +274,7 @@
                 map.centerAndZoom([120.19, 30.26], 6);
               //  map.resize();
                // map.reposition();
-                $(".content").hide();
+                $(".infocontent").hide();
 
             })
             // $("#function").hide();
@@ -458,6 +459,7 @@
                 // console.log(showClusterData);
                 if (showClusterData.length) {
                     addMultiClusters(showClusterData);
+                   // addClusters(showClusterData[0]);
                 }
 
             }
@@ -582,8 +584,8 @@
               //alert(0);
               $(".checks label").eq(0).trigger("click");
              // $(".checks label").eq(0).trigger("click");
-              $(".checks label").eq(1).trigger("click");
-              $(".checks label").eq(2).trigger("click");
+           //   $(".checks label").eq(1).trigger("click");
+            //  $(".checks label").eq(2).trigger("click");
              
           }
          
@@ -706,7 +708,7 @@
                             
                         }
                         switchLayer();
-                       $(this).prev().trigger("click");
+                     //  $(this).prev().trigger("click");
                     })
                 });
                 //切换选择部分的js
@@ -714,7 +716,7 @@
                     // clusterType.length = 0;
                     $(this).addClass("active").siblings().removeClass("active");
                     var $index = $(this).index();
-                    $(".content .control").find("ul.second").eq($index).show().siblings("ul.second").hide();
+                    $(".infocontent .control").find("ul.second").eq($index).show().siblings("ul.second").hide();
 
                     $(".control").find("ul.second").eq($index).find("li").eq(0).trigger("click");
 
@@ -792,7 +794,7 @@
                             success: function (data) {
                                 // pointData = data;
                                 ClusterData = data.features;
-                                //  addClusters(data);
+                                 // addClusters(data);
 
                             }
 
@@ -832,7 +834,7 @@
                     })
                 });
                 $("#function").click(function () {
-                    // $(".content").show();
+                    // $(".infocontent").show();
                     currenturl = layerConfig["粮食生产功能区"]["功能区级别"].url;
                     visiableArray = layerConfig["粮食生产功能区"]["功能区级别"].array;
                     // console.log(currenturl);
@@ -843,8 +845,8 @@
                     } else {
                         alert("请选择市县！");
                     }
-                    //$(".content>img").click(function () {
-                    //    $(".content").hide();
+                    //$(".infocontent>img").click(function () {
+                    //    $(".infocontent").hide();
                     //    if (map.getLayer("clusters")) {
                     //        map.removeLayer(map.getLayer("clusters"));
                     //    }
@@ -872,7 +874,7 @@
                     //})
                 })
                 $("#farmArea img").click(function () {
-                    $(".content").hide();
+                    $(".infocontent").hide();
                     if (map.getLayer("clusters")) {
                         map.removeLayer(map.getLayer("clusters"));
                     }
@@ -908,7 +910,7 @@
                     $(".sel-fun button").text(areaNmae);
                     $(".sel-fun button").append("<span class=\"caret\"></span>")
                     $("#cityArea").show();
-                    // $(".content").show();
+                    // $(".infocontent").show();
                     if (map.getLayer("clusters")) {
                         map.removeLayer(map.getLayer("clusters"));
                     }
@@ -930,8 +932,8 @@
                     getsubArea(proName);
 
                     $("#farmArea").hide();
-                    $(".content>img").click(function () {
-                        $(".content").hide();
+                    $(".infocontent>img").click(function () {
+                        $(".infocontent").hide();
 
 
                     })
@@ -943,14 +945,14 @@
                     var proName = $(this).find("option:checked").val();
                     var areaNmae = $(this).find("option:checked").text();
                     $("#cityArea").show();
-                    // $(".content").show();
+                    // $(".infocontent").show();
                     sssy = areaNmae;
                     ssqy = "";
                     getsubArea(proName);
 
                     $("#farmArea").hide();
-                    $(".content>img").click(function () {
-                        $(".content").hide();
+                    $(".infocontent>img").click(function () {
+                        $(".infocontent").hide();
 
 
                     })
@@ -1269,8 +1271,9 @@
                     });
                     point_array.push(photoInfo.data);
                 }
-
-
+                var infoTemplate = new InfoTemplate("Attributes", "${*}");
+                infoTemplate.setTitle("属性信息");
+                infoTemplate.setContent("State Name");
                 // popupTemplate to work with attributes specific to this dataset
                 var popupTemplate = new PopupTemplate({
                     "title": "属性信息",
@@ -1339,7 +1342,6 @@
                 //var red = new PictureMarkerSymbol(picBaseUrl + "RedPin1LargeB.png", 100, 100).setOffset(0, 15);
                 var picBaseUrl = "img/";
                 var blue = new PictureMarkerSymbol(picBaseUrl + "marker-blue.png", 28, 52).setOffset(0, 0);
-                var green = new PictureMarkerSymbol(picBaseUrl + "marker-green.png", 28, 52).setOffset(0, 0);
                 var red = new PictureMarkerSymbol(picBaseUrl + "marker-green.png", 28, 52).setOffset(0, 0);
                 //  renderer.addBreak(0, 30000, blue);
                 //    renderer.addBreak(100, 1000, green);
@@ -1363,7 +1365,7 @@
                     "wkid": 4326
                 });
                 //    photoInfo.data = arrayUtils.map(resp, function (p) {
-                photoInfo.data = arrayUtils.map(resp.features, function (p, i) {
+                photoInfo.data = arrayUtils.map(resp, function (p, i) {
                     var latlng = new Point(parseFloat(p.geometry.x), parseFloat(p.geometry.y), wgs);
                     //  var latlng = new Point(parseFloat(p.lng), parseFloat(p.lat), wgs);
                     //  var latlng = new Point(parseFloat(p.X), parseFloat(p.Y), wgs);
@@ -1432,14 +1434,14 @@
                 clusterLayer.setRenderer(renderer);
                 map.addLayer(clusterLayer);
 
-                // close the info window when the map is clicked
-                map.on("click", cleanUp);
-                // close the info window when esc is pressed
-                map.on("key-down", function (e) {
-                    if (e.keyCode === 27) {
-                        cleanUp();
-                    }
-                });
+                //// close the info window when the map is clicked
+                //map.on("click", cleanUp);
+                //// close the info window when esc is pressed
+                //map.on("key-down", function (e) {
+                //    if (e.keyCode === 27) {
+                //        cleanUp();
+                //    }
+                //});
             }
             //切换底图
             function showLayer(maptype) {
@@ -1525,7 +1527,7 @@
             </div>
 
         </div>
-        <div id="farmArea" class="content" style="display: none">
+        <div id="farmArea" class="infocontent" style="display: none">
             <img src="images/close.png" class="fr">
             <div class="control">
                 <ul class="btns">
@@ -1533,18 +1535,18 @@
                     <li class="yq">现代农业园区</li>
                     <li class="nt">标准农田</li>
                 </ul>
-                <ul class="second ls-content" style="display: block">
+                <ul class="second ls-infocontent" style="display: block">
                     <li class="active gn">功能区级别</li>
                     <li class="zt">建设状态</li>
                     <li class="mj">建设面积</li>
                     <li class="nf">建设年份</li>
                 </ul>
-                <ul class="second yq-content" style="display: none">
+                <ul class="second yq-infocontent" style="display: none">
                     <li class="xdny">现代农业综合区</li>
                     <li class="zdcy">主导产业示范区</li>
                     <li class="tsny">特色农业精品区</li>
                 </ul>
-                <ul class="second nt-content" style="display: none">
+                <ul class="second nt-infocontent" style="display: none">
                     <li class="cgxm">千万亩工程项目</li>
                     <li class="bznt">标准农田建设区</li>
                     <li class="cbxm">储备项目</li>
@@ -2012,7 +2014,7 @@
                 </ul>
             </div>
         </div>
-        <div id="cityArea" class="content" style="display: none">
+        <div id="cityArea" class="infocontent" style="display: none">
             <img src="images/close.png" class="fr">
             <div class="control areaControl">
 

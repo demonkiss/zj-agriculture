@@ -291,16 +291,33 @@
       this._clusters.push(cluster);
     },
 
-    _showAllClusters: function() {
+    _showAllClusters: function () {
+        var tp;
+        if (map.spatialReference.isWebMercator()) {
+            //map为WebMercator坐标系
+            tp = "webm";
+        }
+        else {
+            //map为非WebMercator坐标系
+            tp = "nowebm";
+        }
       for ( var i = 0, il = this._clusters.length; i < il; i++ ) {
         var c = this._clusters[i];
-        this._showCluster(c);
+        this._showCluster(c,tp);
       }
     },
 
-    _showCluster: function (c) {
-     //   debugger;
-      var point = new Point(c.x, c.y, this._sr);
+    _showCluster: function (c,tp) {
+        //   debugger;
+        var point;
+        if (tp == "webm") {
+            point = new Point(c.x, c.y, this._sr);
+        }
+        else {
+            var latlng = new Point(parseFloat(c.x), parseFloat(c.y), this._sr);
+            point = webMercatorUtils.webMercatorToGeographic(latlng);
+        }
+     // var point = new Point(c.x, c.y, this._sr);
         this.add(
         new Graphic(
           point, 
